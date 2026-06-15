@@ -1,1 +1,2830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Copa 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --gold-dark: #8A6D1F;
+  --green: #006847;
+  --green-dark: #004d35;
+  --green-light: #e8f5ee;
+  --red: #CE1126;
+  --bg: #f7f6f2;
+  --white: #ffffff;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --border: rgba(0,0,0,0.1);
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warn: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
+.header { background: var(--green); color: white; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,104,71,0.3); }
+.header-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+.header-user { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.header-user span { opacity: 0.9; font-weight: 500; }
+.btn-logout { background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+.btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+.nav-tabs { background: var(--white); border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; padding: 0 1rem; position: sticky; top: 64px; z-index: 50; }
+.nav-tab { padding: 14px 18px; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; color: var(--muted); transition: all .15s; }
+.nav-tab:hover { color: var(--green); }
+.nav-tab.active { color: var(--green); border-bottom-color: var(--gold); font-weight: 600; }
+
+.container { max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem; }
+.hidden { display: none !important; }
+
+.login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); position: relative; overflow: hidden; padding: 1rem; }
+.login-wrap::before { content: ''; position: absolute; top: -50%; left: -20%; width: 140%; height: 200%; background: radial-gradient(circle at 30% 40%, rgba(201,168,76,0.18), transparent 50%), radial-gradient(circle at 70% 60%, rgba(206,17,38,0.1), transparent 50%); }
+.login-card { background: white; border-radius: 20px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); position: relative; z-index: 2; }
+.login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 3px; color: var(--green); text-align: center; line-height: 1; }
+.login-sub { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 1rem; letter-spacing: 1px; text-transform: uppercase; }
+.login-banner { background: var(--green-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--green-dark); margin-bottom: 1.5rem; text-align: center; letter-spacing: 1px; }
+.login-tabs { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; margin-bottom: 1.5rem; }
+.login-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 7px; color: var(--muted); transition: all .15s; }
+.login-tab.active { background: var(--green); color: white; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .08em; }
+.form-group input { width: 100%; padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; transition: border .15s; }
+.form-group input:focus { border-color: var(--green); }
+.btn-login { width: 100%; padding: 13px; background: var(--green); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background .15s; margin-top: .5rem; }
+.btn-login:hover { background: var(--green-dark); }
+.btn-login:disabled { opacity: 0.6; cursor: wait; }
+.error-msg { color: var(--danger); font-size: 13px; margin-top: .5rem; padding: 9px 12px; background: #fee2e2; border-radius: 8px; }
+.success-msg { color: var(--success); font-size: 13px; margin-top: .5rem; padding: 9px 12px; background: #dcfce7; border-radius: 8px; }
+
+.card { background: var(--white); border-radius: 14px; padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+.card-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.5px; color: var(--green); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.card-title .group-badge { background: var(--gold); color: white; padding: 2px 10px; border-radius: 6px; font-size: 14px; }
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: .75rem; }
+
+.banner { background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); color: white; padding: 1.4rem 1.4rem; border-radius: 14px; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+.banner::before { content: ''; position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(201,168,76,0.15); pointer-events: none; }
+.banner::after { content: ''; position: absolute; bottom: -50px; left: 30%; width: 100px; height: 100px; border-radius: 50%; background: rgba(206,17,38,0.1); pointer-events: none; }
+.banner > * { position: relative; z-index: 1; }
+.banner-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--gold-light); margin-bottom: 4px; position: relative; }
+.banner-text { font-size: 13px; opacity: 0.95; line-height: 1.5; position: relative; }
+
+.match-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; transition: all .15s; }
+.match-card.locked { background: #fafafa; opacity: 0.85; }
+.match-card.has-result { background: var(--green-light); border-color: var(--green); }
+.match-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 11px; color: var(--muted); }
+.match-date { font-weight: 600; color: var(--green); }
+.match-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; letter-spacing: .05em; }
+.match-status.locked { background: #fef3c7; color: var(--warn); }
+.match-status.result { background: var(--green); color: white; }
+.match-status.open { background: var(--green-light); color: var(--green-dark); }
+.match-row { display: flex; align-items: center; gap: 10px; }
+.team { flex: 1; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.team.right { justify-content: flex-end; text-align: right; }
+.team .flag { font-size: 20px; line-height: 1; }
+.score-box { display: flex; align-items: center; gap: 5px; }
+input.score { width: 42px; height: 38px; text-align: center; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; font-weight: 700; font-family: 'DM Sans', sans-serif; outline: none; background: var(--white); color: var(--text); transition: all .15s; }
+input.score:focus { border-color: var(--green); }
+input.score:disabled { background: #f5f5f5; color: var(--muted); cursor: not-allowed; }
+input.score.real-score { border-color: var(--green); background: var(--green); color: white; }
+.sep { font-size: 13px; color: var(--muted); font-weight: 700; }
+
+.groups-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+@media(max-width:600px) { .groups-grid { grid-template-columns: 1fr; } }
+.group-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+.group-label { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--green); margin-bottom: .75rem; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+.group-label .gbadge { background: var(--gold); color: white; padding: 2px 9px; border-radius: 5px; font-size: 13px; }
+.standing { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 12px; }
+.standing-pos { min-width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.pos-1 { background: var(--gold); color: var(--gold-dark); }
+.pos-2 { background: #c0c0c0; color: #404040; }
+.pos-3 { background: #f3f4f6; color: var(--muted); }
+.pos-4 { background: #f3f4f6; color: var(--muted); }
+.standing-flag { font-size: 16px; }
+.standing-team { flex: 1; }
+.standing-pts { font-weight: 700; font-size: 12px; color: var(--green); }
+.standing-detail { font-size: 10px; color: var(--muted); min-width: 50px; text-align: right; }
+
+.extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+@media(max-width:600px) { .extras-grid { grid-template-columns: 1fr; } }
+.extra-item label { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 5px; }
+.extra-item select, .extra-item input[type=text] { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); outline: none; }
+.extra-item select:focus, .extra-item input[type=text]:focus { border-color: var(--green); background: white; }
+.pts-badge { display: inline-block; background: var(--gold); color: var(--gold-dark); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 5px; text-transform: none; letter-spacing: 0; }
+
+.rank-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f0f0f0; }
+.rank-row:last-child { border-bottom: none; }
+.rank-row.top-1 { background: linear-gradient(90deg, rgba(201,168,76,0.12), transparent); margin: 0 -.5rem; padding: 13px .75rem; border-radius: 10px; border-bottom: none; }
+.rank-num { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--muted); min-width: 32px; }
+.rank-num.top { color: var(--gold); }
+.rank-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--green); flex-shrink: 0; }
+.rank-name { flex: 1; font-weight: 600; font-size: 14px; }
+.rank-name small { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+.rank-pts { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--green); }
+.rank-pts small { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--muted); font-weight: 400; }
+.you-badge { background: var(--green); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+
+.admin-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: end; }
+.admin-form input { flex: 1; min-width: 120px; padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; }
+.btn { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: all .15s; }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: var(--green-dark); }
+.btn-sm { padding: 5px 12px; font-size: 11px; }
+.btn-danger { background: #fee2e2; color: var(--danger); }
+.btn-danger:hover { background: #fecaca; }
+.btn-warn { background: #fef3c7; color: var(--warn); }
+.btn-warn:hover { background: #fde68a; }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+.btn-outline:hover { background: var(--bg); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.user-row:last-child { border-bottom: none; }
+
+.pts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.pts-table tr { border-bottom: 1px solid #f0f0f0; }
+.pts-table tr:last-child { border-bottom: none; }
+.pts-table td { padding: 10px 4px; }
+.pts-table td:last-child { text-align: right; font-weight: 700; color: var(--green); white-space: nowrap; font-size: 13px; }
+.pts-table .section-row td { background: var(--green-light); color: var(--green-dark); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 7px 8px; }
+
+.loading { text-align: center; padding: 3rem; color: var(--muted); }
+.spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.save-indicator { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--green); color: white; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,104,71,0.4); z-index: 1000; }
+.save-indicator.show { opacity: 1; }
+
+.info-box { background: var(--green-light); border-left: 4px solid var(--green); padding: 11px 14px; font-size: 13px; color: var(--green-dark); margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
+.warn-box { background: #fef3c7; border-left: 4px solid var(--warn); padding: 11px 14px; font-size: 13px; color: #78350f; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
+
+.lock-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 3px 8px; border-radius: 5px; cursor: pointer; border: 1px solid var(--border); background: white; font-weight: 600; }
+.lock-toggle.locked { background: #fef3c7; color: var(--warn); border-color: #fbbf24; }
+.lock-toggle.unlocked { background: var(--green-light); color: var(--green-dark); border-color: var(--green); }
+
+.lock-btns { display: inline-flex; gap: 3px; background: #f3f4f6; padding: 2px; border-radius: 7px; }
+.lock-btn { font-size: 11px; font-weight: 700; padding: 4px 9px; border: none; border-radius: 5px; cursor: pointer; background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; transition: all .15s; }
+.lock-btn:hover { background: white; color: var(--text); }
+.lock-btn.unlock.active { background: var(--green); color: white; box-shadow: 0 1px 4px rgba(0,104,71,0.3); }
+.lock-btn.lock.active { background: var(--warn); color: white; box-shadow: 0 1px 4px rgba(217,119,6,0.3); }
+.lock-btn.auto.active { background: #6366f1; color: white; box-shadow: 0 1px 4px rgba(99,102,241,0.3); }
+
+.player-grid { display: grid; grid-template-columns: 1fr; gap: 6px; max-height: 280px; overflow-y: auto; padding: 4px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); }
+.player-option { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; background: white; border: 1.5px solid transparent; transition: all .15s; }
+.player-option:hover { background: var(--green-light); }
+.player-option.selected { background: var(--green); color: white; border-color: var(--green-dark); font-weight: 600; }
+.player-option.disabled-option { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+.player-option input { margin: 0; }
+.player-custom { margin-top: 6px; display: flex; gap: 6px; }
+.player-custom input { flex: 1; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 12px; font-family: 'DM Sans', sans-serif; }
+
+.match-locked-info { font-size: 11px; color: var(--warn); font-weight: 600; }
+
+.match-card.is-double { border: 2px solid var(--gold); background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02)); position: relative; }
+.match-card.is-double::before { content: '⭐ DOBRO'; position: absolute; top: -10px; right: 14px; background: var(--gold); color: var(--gold-dark); font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 6px; letter-spacing: .08em; }
+.double-btn { background: transparent; border: 1.5px dashed var(--border); color: var(--muted); padding: 5px 11px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .15s; }
+.double-btn:hover { border-color: var(--gold); color: var(--gold-dark); background: rgba(201,168,76,0.08); }
+.double-btn.active { background: var(--gold); color: var(--gold-dark); border: 1.5px solid var(--gold-dark); border-style: solid; }
+.double-badge { display: inline-block; font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 700; background: var(--gold); color: var(--gold-dark); }
+
+.earned-pts { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+.earned-pts.positive { background: var(--gold); color: var(--gold-dark); }
+.earned-pts.zero { background: #f3f4f6; color: var(--muted); }
+
+.real-score-line { margin-top: 6px; font-size: 12px; color: var(--green-dark); background: rgba(0,104,71,0.06); padding: 5px 10px; border-radius: 6px; }
+
+.phase-mult { display: inline-block; background: var(--red); color: white; padding: 2px 9px; border-radius: 6px; font-size: 14px; font-weight: 800; letter-spacing: .05em; font-family: 'DM Sans', sans-serif; }
+
+.admin-subtabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 1rem; padding: 4px; background: white; border-radius: 12px; border: 1px solid var(--border); }
+.admin-subtab { padding: 9px 14px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 8px; color: var(--muted); white-space: nowrap; transition: all .15s; }
+.admin-subtab:hover { background: var(--bg); color: var(--green); }
+.admin-subtab.active { background: var(--green); color: white; }
+
+.pts-group { background: #fafafa; border-radius: 10px; padding: 10px 12px; margin-bottom: .75rem; }
+.pts-group-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; margin-bottom: 6px; border-bottom: 1px solid #eee; font-size: 13px; }
+.pts-group-header b { color: var(--green); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; }
+.pts-group-header small { font-size: 11px; color: var(--muted); font-weight: 500; }
+.pts-group-total { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--gold-dark); background: var(--gold-light); padding: 2px 10px; border-radius: 6px; letter-spacing: 1px; }
+.pts-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+.pts-row:last-child { border-bottom: none; }
+.pts-row-label { font-weight: 500; }
+.pts-row-real { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.pts-row-value { font-family: 'Bebas Neue', sans-serif; font-size: 15px; font-weight: 700; min-width: 40px; text-align: right; letter-spacing: .5px; }
+.pts-row-value.positive { color: var(--gold-dark); }
+.pts-row-value.zero { color: var(--muted); }
+@media(max-width:540px) { .pts-row { grid-template-columns: 1fr; gap: 3px; } .pts-row-real, .pts-row-value { text-align: left; } }
+
+.made-by { text-align: center; font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 1.5rem; position: relative; z-index: 2; letter-spacing: 1px; }
+.made-by b { color: var(--gold-light); font-weight: 600; }
+.footer-credit { text-align: center; font-size: 11px; color: var(--muted); padding: 1.5rem 1rem; letter-spacing: .5px; }
+.footer-credit b { color: var(--green); }
+
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">BOLÃO 2026</div>
+    <div class="login-sub">Copa do Mundo FIFA</div>
+    <div class="login-banner">🇨🇦 🇺🇸 🇲🇽 &nbsp;Canadá · EUA · México</div>
+    <div class="login-tabs">
+      <div class="login-tab active" id="lt-login" onclick="switchLoginTab('login')">Entrar</div>
+      <div class="login-tab" id="lt-signup" onclick="switchLoginTab('signup')">Criar conta</div>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-err" class="error-msg hidden"></div>
+      <button class="btn-login" id="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+    <div id="signup-form" class="hidden">
+      <div class="form-group">
+        <label>Apelido (como aparece no ranking)</label>
+        <input type="text" id="signup-nick" placeholder="ex: joao" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label>Senha (mínimo 6 caracteres)</label>
+        <input type="password" id="signup-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doSignup()">
+      </div>
+      <div id="signup-err" class="error-msg hidden"></div>
+      <button class="btn-login" id="btn-signup" onclick="doSignup()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <div class="header">
+    <div class="header-logo">⚽ BOLÃO 2026</div>
+    <div class="header-user">
+      <span id="header-username"></span>
+      <button class="btn-logout" onclick="refreshAll()" title="Buscar dados atualizados">🔄</button>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+  <div class="nav-tabs" id="nav-tabs"></div>
+  <div class="container" id="main-content">
+    <div class="loading"><div class="spinner"></div>Carregando...</div>
+  </div>
+</div>
+
+<div class="save-indicator" id="save-indicator">✓ Salvo</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByUF3JVJDiua_Maenzdl_7wLD3NWNmFVE",
+  authDomain: "bolao2026-78c83.firebaseapp.com",
+  projectId: "bolao2026-78c83",
+  storageBucket: "bolao2026-78c83.firebasestorage.app",
+  messagingSenderId: "825946954674",
+  appId: "1:825946954674:web:9cca55031fbf105ed822ab"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+window.fb = { db, auth, collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+const GROUPS = {
+  A:{teams:[{n:'México',f:'🇲🇽'},{n:'África do Sul',f:'🇿🇦'},{n:'Coreia do Sul',f:'🇰🇷'},{n:'Rep. Tcheca',f:'🇨🇿'}]},
+  B:{teams:[{n:'Canadá',f:'🇨🇦'},{n:'Bósnia-Herz.',f:'🇧🇦'},{n:'Catar',f:'🇶🇦'},{n:'Suíça',f:'🇨🇭'}]},
+  C:{teams:[{n:'Brasil',f:'🇧🇷'},{n:'Marrocos',f:'🇲🇦'},{n:'Haiti',f:'🇭🇹'},{n:'Escócia',f:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'}]},
+  D:{teams:[{n:'EUA',f:'🇺🇸'},{n:'Paraguai',f:'🇵🇾'},{n:'Austrália',f:'🇦🇺'},{n:'Turquia',f:'🇹🇷'}]},
+  E:{teams:[{n:'Alemanha',f:'🇩🇪'},{n:'Curaçao',f:'🇨🇼'},{n:'Costa do Marfim',f:'🇨🇮'},{n:'Equador',f:'🇪🇨'}]},
+  F:{teams:[{n:'Holanda',f:'🇳🇱'},{n:'Japão',f:'🇯🇵'},{n:'Suécia',f:'🇸🇪'},{n:'Tunísia',f:'🇹🇳'}]},
+  G:{teams:[{n:'Bélgica',f:'🇧🇪'},{n:'Egito',f:'🇪🇬'},{n:'Irã',f:'🇮🇷'},{n:'Nova Zelândia',f:'🇳🇿'}]},
+  H:{teams:[{n:'Espanha',f:'🇪🇸'},{n:'Cabo Verde',f:'🇨🇻'},{n:'Arábia Saudita',f:'🇸🇦'},{n:'Uruguai',f:'🇺🇾'}]},
+  I:{teams:[{n:'França',f:'🇫🇷'},{n:'Senegal',f:'🇸🇳'},{n:'Noruega',f:'🇳🇴'},{n:'Iraque',f:'🇮🇶'}]},
+  J:{teams:[{n:'Argentina',f:'🇦🇷'},{n:'Argélia',f:'🇩🇿'},{n:'Áustria',f:'🇦🇹'},{n:'Jordânia',f:'🇯🇴'}]},
+  K:{teams:[{n:'Portugal',f:'🇵🇹'},{n:'Uzbequistão',f:'🇺🇿'},{n:'Colômbia',f:'🇨🇴'},{n:'RD Congo',f:'🇨🇩'}]},
+  L:{teams:[{n:'Inglaterra',f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},{n:'Croácia',f:'🇭🇷'},{n:'Gana',f:'🇬🇭'},{n:'Panamá',f:'🇵🇦'}]}
+};
+
+const FLAG_BY_TEAM = {};
+Object.values(GROUPS).forEach(g => g.teams.forEach(t => FLAG_BY_TEAM[t.n] = t.f));
+
+const ALL_TEAMS_SORTED = Object.values(GROUPS).flatMap(g => g.teams.map(t => t.n)).sort();
+
+const MATCHES = [
+  {g:'A', h:'México', a:'África do Sul', dt:'2026-06-11T19:00:00Z', local:'Cidade do México'},
+  {g:'A', h:'Coreia do Sul', a:'Rep. Tcheca', dt:'2026-06-12T02:00:00Z', local:'Guadalajara'},
+  {g:'B', h:'Canadá', a:'Bósnia-Herz.', dt:'2026-06-12T19:00:00Z', local:'Toronto'},
+  {g:'D', h:'EUA', a:'Paraguai', dt:'2026-06-13T01:00:00Z', local:'Los Angeles'},
+  {g:'D', h:'Austrália', a:'Turquia', dt:'2026-06-13T04:00:00Z', local:'Vancouver'},
+  {g:'B', h:'Catar', a:'Suíça', dt:'2026-06-13T19:00:00Z', local:'San Francisco'},
+  {g:'C', h:'Brasil', a:'Marrocos', dt:'2026-06-13T22:00:00Z', local:'Nova York/Nova Jersey'},
+  {g:'C', h:'Haiti', a:'Escócia', dt:'2026-06-14T01:00:00Z', local:'Boston'},
+  {g:'E', h:'Alemanha', a:'Curaçao', dt:'2026-06-14T17:00:00Z', local:'Houston'},
+  {g:'F', h:'Holanda', a:'Japão', dt:'2026-06-14T20:00:00Z', local:'Dallas'},
+  {g:'E', h:'Costa do Marfim', a:'Equador', dt:'2026-06-14T23:00:00Z', local:'Filadélfia'},
+  {g:'F', h:'Suécia', a:'Tunísia', dt:'2026-06-15T02:00:00Z', local:'Monterrey'},
+  {g:'H', h:'Espanha', a:'Cabo Verde', dt:'2026-06-15T16:00:00Z', local:'Atlanta'},
+  {g:'G', h:'Bélgica', a:'Egito', dt:'2026-06-15T19:00:00Z', local:'Seattle'},
+  {g:'H', h:'Arábia Saudita', a:'Uruguai', dt:'2026-06-15T22:00:00Z', local:'Miami'},
+  {g:'G', h:'Irã', a:'Nova Zelândia', dt:'2026-06-16T01:00:00Z', local:'Los Angeles'},
+  {g:'J', h:'Argentina', a:'Argélia', dt:'2026-06-16T17:00:00Z', local:'Kansas City'},
+  {g:'I', h:'França', a:'Senegal', dt:'2026-06-16T19:00:00Z', local:'Nova York/Nova Jersey'},
+  {g:'I', h:'Iraque', a:'Noruega', dt:'2026-06-16T22:00:00Z', local:'Boston'},
+  {g:'J', h:'Áustria', a:'Jordânia', dt:'2026-06-17T04:00:00Z', local:'San Francisco'},
+  {g:'K', h:'Portugal', a:'RD Congo', dt:'2026-06-17T17:00:00Z', local:'Houston'},
+  {g:'L', h:'Inglaterra', a:'Croácia', dt:'2026-06-17T20:00:00Z', local:'Dallas'},
+  {g:'L', h:'Gana', a:'Panamá', dt:'2026-06-17T23:00:00Z', local:'Toronto'},
+  {g:'K', h:'Uzbequistão', a:'Colômbia', dt:'2026-06-18T02:00:00Z', local:'Cidade do México'},
+  {g:'A', h:'Rep. Tcheca', a:'África do Sul', dt:'2026-06-18T16:00:00Z', local:'Atlanta'},
+  {g:'B', h:'Suíça', a:'Bósnia-Herz.', dt:'2026-06-18T19:00:00Z', local:'Los Angeles'},
+  {g:'B', h:'Canadá', a:'Catar', dt:'2026-06-18T22:00:00Z', local:'Vancouver'},
+  {g:'A', h:'México', a:'Coreia do Sul', dt:'2026-06-19T01:00:00Z', local:'Guadalajara'},
+  {g:'D', h:'Turquia', a:'Paraguai', dt:'2026-06-19T04:00:00Z', local:'San Francisco'},
+  {g:'D', h:'EUA', a:'Austrália', dt:'2026-06-19T19:00:00Z', local:'Seattle'},
+  {g:'C', h:'Escócia', a:'Marrocos', dt:'2026-06-19T22:00:00Z', local:'Boston'},
+  {g:'C', h:'Brasil', a:'Haiti', dt:'2026-06-20T01:00:00Z', local:'Filadélfia'},
+  {g:'F', h:'Holanda', a:'Suécia', dt:'2026-06-20T17:00:00Z', local:'Houston'},
+  {g:'E', h:'Alemanha', a:'Costa do Marfim', dt:'2026-06-20T20:00:00Z', local:'Toronto'},
+  {g:'E', h:'Equador', a:'Curaçao', dt:'2026-06-21T00:00:00Z', local:'Kansas City'},
+  {g:'F', h:'Tunísia', a:'Japão', dt:'2026-06-21T04:00:00Z', local:'Monterrey'},
+  {g:'H', h:'Espanha', a:'Arábia Saudita', dt:'2026-06-21T16:00:00Z', local:'Atlanta'},
+  {g:'G', h:'Bélgica', a:'Irã', dt:'2026-06-21T19:00:00Z', local:'Los Angeles'},
+  {g:'H', h:'Uruguai', a:'Cabo Verde', dt:'2026-06-21T22:00:00Z', local:'Miami'},
+  {g:'G', h:'Nova Zelândia', a:'Egito', dt:'2026-06-22T01:00:00Z', local:'Vancouver'},
+  {g:'J', h:'Argentina', a:'Áustria', dt:'2026-06-22T17:00:00Z', local:'Dallas'},
+  {g:'I', h:'França', a:'Iraque', dt:'2026-06-22T21:00:00Z', local:'Filadélfia'},
+  {g:'I', h:'Noruega', a:'Senegal', dt:'2026-06-23T00:00:00Z', local:'Nova York/Nova Jersey'},
+  {g:'J', h:'Jordânia', a:'Argélia', dt:'2026-06-23T03:00:00Z', local:'San Francisco'},
+  {g:'K', h:'Portugal', a:'Uzbequistão', dt:'2026-06-23T17:00:00Z', local:'Houston'},
+  {g:'L', h:'Inglaterra', a:'Gana', dt:'2026-06-23T20:00:00Z', local:'Boston'},
+  {g:'L', h:'Panamá', a:'Croácia', dt:'2026-06-23T23:00:00Z', local:'Toronto'},
+  {g:'K', h:'Colômbia', a:'RD Congo', dt:'2026-06-24T02:00:00Z', local:'Guadalajara'},
+  {g:'B', h:'Suíça', a:'Canadá', dt:'2026-06-24T19:00:00Z', local:'Vancouver'},
+  {g:'B', h:'Bósnia-Herz.', a:'Catar', dt:'2026-06-24T19:00:00Z', local:'Seattle'},
+  {g:'C', h:'Escócia', a:'Brasil', dt:'2026-06-24T22:00:00Z', local:'Miami'},
+  {g:'C', h:'Marrocos', a:'Haiti', dt:'2026-06-24T22:00:00Z', local:'Atlanta'},
+  {g:'A', h:'Rep. Tcheca', a:'México', dt:'2026-06-25T01:00:00Z', local:'Cidade do México'},
+  {g:'A', h:'África do Sul', a:'Coreia do Sul', dt:'2026-06-25T01:00:00Z', local:'Monterrey'},
+  {g:'E', h:'Equador', a:'Alemanha', dt:'2026-06-25T20:00:00Z', local:'Nova York/Nova Jersey'},
+  {g:'E', h:'Curaçao', a:'Costa do Marfim', dt:'2026-06-25T20:00:00Z', local:'Filadélfia'},
+  {g:'F', h:'Japão', a:'Suécia', dt:'2026-06-25T23:00:00Z', local:'Dallas'},
+  {g:'F', h:'Tunísia', a:'Holanda', dt:'2026-06-25T23:00:00Z', local:'Kansas City'},
+  {g:'D', h:'Turquia', a:'EUA', dt:'2026-06-26T02:00:00Z', local:'Los Angeles'},
+  {g:'D', h:'Paraguai', a:'Austrália', dt:'2026-06-26T02:00:00Z', local:'San Francisco'},
+  {g:'I', h:'Noruega', a:'França', dt:'2026-06-26T19:00:00Z', local:'Boston'},
+  {g:'I', h:'Senegal', a:'Iraque', dt:'2026-06-26T19:00:00Z', local:'Toronto'},
+  {g:'H', h:'Cabo Verde', a:'Arábia Saudita', dt:'2026-06-27T00:00:00Z', local:'Houston'},
+  {g:'H', h:'Uruguai', a:'Espanha', dt:'2026-06-27T00:00:00Z', local:'Guadalajara'},
+  {g:'G', h:'Egito', a:'Irã', dt:'2026-06-27T03:00:00Z', local:'Seattle'},
+  {g:'G', h:'Nova Zelândia', a:'Bélgica', dt:'2026-06-27T03:00:00Z', local:'Vancouver'},
+  {g:'L', h:'Panamá', a:'Inglaterra', dt:'2026-06-27T21:00:00Z', local:'Nova York/Nova Jersey'},
+  {g:'L', h:'Croácia', a:'Gana', dt:'2026-06-27T21:00:00Z', local:'Filadélfia'},
+  {g:'K', h:'Colômbia', a:'Portugal', dt:'2026-06-27T23:30:00Z', local:'Miami'},
+  {g:'K', h:'RD Congo', a:'Uzbequistão', dt:'2026-06-27T23:30:00Z', local:'Atlanta'},
+  {g:'J', h:'Argélia', a:'Áustria', dt:'2026-06-28T02:00:00Z', local:'Kansas City'},
+  {g:'J', h:'Jordânia', a:'Argentina', dt:'2026-06-28T02:00:00Z', local:'Dallas'}
+];
+
+MATCHES.forEach((m, i) => { m.key = `m${i}`; });
+
+const PLAYER_FAVORITES = {
+  artilheiro: [
+    'Kylian Mbappé (França)',
+    'Harry Kane (Inglaterra)',
+    'Lionel Messi (Argentina)',
+    'Erling Haaland (Noruega)',
+    'Lamine Yamal (Espanha)',
+    'Lautaro Martínez (Argentina)',
+    'Cristiano Ronaldo (Portugal)',
+    'Ousmane Dembélé (França)',
+    'Nick Woltemade (Alemanha)',
+    'Álvaro Morata (Espanha)',
+    'Vinícius Júnior (Brasil)',
+    'Romelu Lukaku (Bélgica)',
+    'Julián Álvarez (Argentina)',
+    'Ferran Torres (Espanha)',
+    'Raphinha (Brasil)',
+    'Mikel Oyarzabal (Espanha)',
+    'Richarlison (Brasil)',
+    'João Pedro (Brasil)',
+    'Cody Gakpo (Holanda)',
+    'Bukayo Saka (Inglaterra)',
+    'Neymar (Brasil)',
+    'Jude Bellingham (Inglaterra)',
+    'Cole Palmer (Inglaterra)',
+    'Gonçalo Ramos (Portugal)',
+    'Florian Wirtz (Alemanha)',
+    'Marcus Thuram (França)',
+    'Bruno Fernandes (Portugal)',
+    'Mohamed Salah (Egito)',
+    'Kai Havertz (Alemanha)',
+    'Estêvão Willian (Brasil)'
+  ],
+  bola_ouro: [
+    'Lamine Yamal (Espanha)',
+    'Kylian Mbappé (França)',
+    'Ousmane Dembélé (França)',
+    'Vinícius Júnior (Brasil)',
+    'Jude Bellingham (Inglaterra)',
+    'Harry Kane (Inglaterra)',
+    'Pedri (Espanha)',
+    'Lionel Messi (Argentina)',
+    'Erling Haaland (Noruega)',
+    'Raphinha (Brasil)',
+    'Cristiano Ronaldo (Portugal)',
+    'Bukayo Saka (Inglaterra)',
+    'Rodri (Espanha)',
+    'Florian Wirtz (Alemanha)',
+    'Lautaro Martínez (Argentina)',
+    'Bruno Fernandes (Portugal)',
+    'Cole Palmer (Inglaterra)',
+    'Phil Foden (Inglaterra)',
+    'Jamal Musiala (Alemanha)',
+    'Kevin De Bruyne (Bélgica)',
+    'Mikel Oyarzabal (Espanha)',
+    'Neymar (Brasil)',
+    'Julián Álvarez (Argentina)',
+    'Marcus Thuram (França)',
+    'Dani Olmo (Espanha)',
+    'Mohamed Salah (Egito)',
+    'Achraf Hakimi (Marrocos)',
+    'Christian Pulisic (EUA)',
+    'Enzo Fernández (Argentina)',
+    'Rodrygo (Brasil)'
+  ],
+  luva: [
+    'Emiliano Martínez (Argentina)',
+    'Mike Maignan (França)',
+    'Unai Simón (Espanha)',
+    'Thibaut Courtois (Bélgica)',
+    'Alisson (Brasil)',
+    'Jordan Pickford (Inglaterra)',
+    'Diogo Costa (Portugal)',
+    'Bart Verbruggen (Holanda)',
+    'Yann Sommer (Suíça)',
+    'Yassine Bounou (Marrocos)',
+    'Oliver Baumann (Alemanha)',
+    'David Raya (Espanha)',
+    'Ederson (Brasil)',
+    'Dominik Livaković (Croácia)',
+    'Guillermo Ochoa (México)'
+  ]
+};
+
+// Fases do mata-mata da Copa do Mundo 2026 (formato com 48 seleções)
+// allowDouble: se o apostador pode marcar jogo dobro nessa fase
+// 16 avos (32 jogos) -> Oitavas (16) -> Quartas (8) -> Semis (4) -> 3º lugar + Final
+const KO_PHASES = [
+  {id:'r32', label:'16 avos de final',  short:'16 avos', count:16, multiplier:1, allowDouble:true},
+  {id:'r16', label:'Oitavas de final',   short:'Oitavas', count:8,  multiplier:1, allowDouble:true},
+  {id:'qf',  label:'Quartas de final',   short:'Quartas', count:4,  multiplier:1, allowDouble:true},
+  {id:'sf',  label:'Semifinais',          short:'Semis',   count:2,  multiplier:2, allowDouble:false},
+  {id:'tp',  label:'Disputa de 3º lugar', short:'3º lugar',count:1,  multiplier:1, allowDouble:false},
+  {id:'fin', label:'Final',               short:'Final',   count:1,  multiplier:3, allowDouble:false}
+];
+
+// Calendário do mata-mata 2026 (datas oficiais FIFA, sem times definidos)
+// R32: 28/06-03/07 · R16: 04-07/07 · QF: 09-11/07 · SF: 14-15/07 · 3º: 18/07 · Final: 19/07
+const KO_DEFAULT_MATCHES = [
+  // 16 avos de final (32 -> 16 jogos) — 28/06 a 03/07
+  {phase:'r32', order:1,  dt:'2026-06-28T19:00:00Z', local:'Los Angeles'},
+  {phase:'r32', order:2,  dt:'2026-06-28T23:00:00Z', local:'Houston'},
+  {phase:'r32', order:3,  dt:'2026-06-29T01:00:00Z', local:'Guadalajara'},
+  {phase:'r32', order:4,  dt:'2026-06-29T17:00:00Z', local:'Dallas'},
+  {phase:'r32', order:5,  dt:'2026-06-29T20:00:00Z', local:'Boston'},
+  {phase:'r32', order:6,  dt:'2026-06-29T23:00:00Z', local:'Atlanta'},
+  {phase:'r32', order:7,  dt:'2026-06-30T17:00:00Z', local:'Nova York/Nova Jersey'},
+  {phase:'r32', order:8,  dt:'2026-06-30T20:00:00Z', local:'Filadélfia'},
+  {phase:'r32', order:9,  dt:'2026-06-30T23:00:00Z', local:'Cidade do México'},
+  {phase:'r32', order:10, dt:'2026-07-01T19:00:00Z', local:'Seattle'},
+  {phase:'r32', order:11, dt:'2026-07-01T22:00:00Z', local:'San Francisco'},
+  {phase:'r32', order:12, dt:'2026-07-02T01:00:00Z', local:'Monterrey'},
+  {phase:'r32', order:13, dt:'2026-07-02T19:00:00Z', local:'Miami'},
+  {phase:'r32', order:14, dt:'2026-07-02T23:00:00Z', local:'Kansas City'},
+  {phase:'r32', order:15, dt:'2026-07-03T01:00:00Z', local:'Toronto'},
+  {phase:'r32', order:16, dt:'2026-07-03T03:00:00Z', local:'Vancouver'},
+  // Oitavas (16 -> 8 jogos) — 04 a 07/07
+  {phase:'r16', order:1, dt:'2026-07-04T19:00:00Z', local:'Filadélfia'},
+  {phase:'r16', order:2, dt:'2026-07-04T23:00:00Z', local:'Houston'},
+  {phase:'r16', order:3, dt:'2026-07-05T17:00:00Z', local:'Cidade do México'},
+  {phase:'r16', order:4, dt:'2026-07-05T20:00:00Z', local:'Dallas'},
+  {phase:'r16', order:5, dt:'2026-07-06T01:00:00Z', local:'Monterrey'},
+  {phase:'r16', order:6, dt:'2026-07-06T19:00:00Z', local:'Atlanta'},
+  {phase:'r16', order:7, dt:'2026-07-06T23:00:00Z', local:'Los Angeles'},
+  {phase:'r16', order:8, dt:'2026-07-07T01:00:00Z', local:'Seattle'},
+  // Quartas (8 -> 4 jogos) — 09 a 11/07
+  {phase:'qf', order:1, dt:'2026-07-09T23:00:00Z', local:'Boston'},
+  {phase:'qf', order:2, dt:'2026-07-10T01:00:00Z', local:'Los Angeles'},
+  {phase:'qf', order:3, dt:'2026-07-10T23:00:00Z', local:'Kansas City'},
+  {phase:'qf', order:4, dt:'2026-07-11T23:00:00Z', local:'Miami'},
+  // Semifinais (4 -> 2 jogos) — 14 e 15/07
+  {phase:'sf', order:1, dt:'2026-07-14T23:00:00Z', local:'Dallas'},
+  {phase:'sf', order:2, dt:'2026-07-15T23:00:00Z', local:'Atlanta'},
+  // Disputa de 3º lugar — 18/07 (Miami)
+  {phase:'tp', order:1, dt:'2026-07-18T20:00:00Z', local:'Miami'},
+  // Final — 19/07 (Nova York/Nova Jersey, MetLife)
+  {phase:'fin', order:1, dt:'2026-07-19T19:00:00Z', local:'Nova York/Nova Jersey'}
+];
+
+</script>
+
+<script>
+// === STATE ===
+const ADMIN_EMAIL = 'admin@bolao2026.com';
+let currentUser = null;
+let currentProfile = null;
+let allPalpites = {};
+let allExtras = {};
+let realScores = {};
+let realExtras = {};
+let manualLocks = {};
+let extrasLocked = false;
+let allDoubles = {};
+let allKoDoubles = {};
+let koMatches = [];
+let allKoPalpites = {};
+let koLocks = {};
+let pointsAdjustments = {};
+let allUsers = [];
+let saveTimeout = null;
+let fbReady = false;
+let playerLists = null; // Listas customizadas pelo admin (sobrepõem PLAYER_FAVORITES)
+
+function getPlayerList(listKey) {
+  if (playerLists && playerLists[listKey] && playerLists[listKey].length) return playerLists[listKey];
+  return PLAYER_FAVORITES[listKey];
+}
+
+window.addEventListener('firebase-ready', () => { fbReady = true; });
+
+async function waitFirebase() {
+  if (fbReady) return;
+  await new Promise(r => { if (fbReady) return r(); window.addEventListener('firebase-ready', r, {once:true}); });
+}
+
+// === FIREBASE HELPERS ===
+async function fbGetDoc(coll, id) {
+  const { db, doc, getDoc } = window.fb;
+  const snap = await getDoc(doc(db, coll, id));
+  return snap.exists() ? {id: snap.id, ...snap.data()} : null;
+}
+async function fbGetAll(coll) {
+  const { db, collection, getDocs } = window.fb;
+  const snap = await getDocs(collection(db, coll));
+  return snap.docs.map(d => ({id: d.id, ...d.data()}));
+}
+async function fbSetDoc(coll, id, data) {
+  const { db, doc, setDoc } = window.fb;
+  await setDoc(doc(db, coll, id), data, {merge: true});
+}
+async function fbDelete(coll, id) {
+  const { db, doc, deleteDoc } = window.fb;
+  await deleteDoc(doc(db, coll, id));
+}
+
+// === AUTH ===
+window.switchLoginTab = function(tab) {
+  document.getElementById('lt-login').classList.toggle('active', tab === 'login');
+  document.getElementById('lt-signup').classList.toggle('active', tab === 'signup');
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
+}
+
+window.doSignup = async function() {
+  const nick = document.getElementById('signup-nick').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-pass').value;
+  const err = document.getElementById('signup-err');
+  const btn = document.getElementById('btn-signup');
+  err.classList.add('hidden');
+  if (!nick || !email || !pass) { showErr(err, 'Preencha todos os campos.'); return; }
+  if (nick.length < 2) { showErr(err, 'Apelido deve ter pelo menos 2 caracteres.'); return; }
+  if (pass.length < 6) { showErr(err, 'Senha deve ter pelo menos 6 caracteres.'); return; }
+  btn.disabled = true; btn.textContent = 'Criando conta...';
+  try {
+    await waitFirebase();
+    const { auth, createUserWithEmailAndPassword } = window.fb;
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await fbSetDoc('users', cred.user.uid, {
+      uid: cred.user.uid, email, nickname: nick, is_admin: false, created_at: Date.now()
+    });
+    currentUser = cred.user;
+    await onLoginSuccess();
+  } catch (e) {
+    let msg = e.message;
+    if (e.code === 'auth/email-already-in-use') msg = 'Este email já está cadastrado.';
+    else if (e.code === 'auth/invalid-email') msg = 'Email inválido.';
+    else if (e.code === 'auth/weak-password') msg = 'Senha muito fraca.';
+    showErr(err, msg);
+    btn.disabled = false; btn.textContent = 'Criar conta';
+  }
+}
+
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  const btn = document.getElementById('btn-login');
+  err.classList.add('hidden');
+  if (!email || !pass) { showErr(err, 'Preencha email e senha.'); return; }
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  try {
+    await waitFirebase();
+    const { auth, signInWithEmailAndPassword } = window.fb;
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    currentUser = cred.user;
+    await onLoginSuccess();
+  } catch (e) {
+    let msg = 'Email ou senha incorretos.';
+    if (e.code === 'auth/too-many-requests') msg = 'Muitas tentativas. Tente mais tarde.';
+    showErr(err, msg);
+    btn.disabled = false; btn.textContent = 'Entrar';
+  }
+}
+
+async function onLoginSuccess() {
+  currentProfile = await fbGetDoc('users', currentUser.uid);
+  if (!currentProfile) {
+    const isFirstUser = !(await fbGetAll('users')).length;
+    currentProfile = {
+      uid: currentUser.uid, email: currentUser.email,
+      nickname: currentUser.email.split('@')[0], is_admin: isFirstUser
+    };
+    await fbSetDoc('users', currentUser.uid, {...currentProfile, created_at: Date.now()});
+  }
+  if (currentUser.email === ADMIN_EMAIL && !currentProfile.is_admin) {
+    currentProfile.is_admin = true;
+    await fbSetDoc('users', currentUser.uid, {is_admin: true});
+  }
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('header-username').textContent = currentProfile.nickname;
+  document.getElementById('btn-login').disabled = false;
+  document.getElementById('btn-login').textContent = 'Entrar';
+  document.getElementById('btn-signup').disabled = false;
+  document.getElementById('btn-signup').textContent = 'Criar conta';
+  await loadAllData(true);
+  // Admin: popula jogos do mata-mata só se ainda não existirem (usa dados já carregados, sem leitura extra)
+  if (currentProfile.is_admin && koMatches.length === 0) {
+    await populateKoMatches();
+    await loadAllData(true);
+  }
+  buildNav();
+  showTab('palpites');
+}
+
+async function populateKoMatches() {
+  for (const m of KO_DEFAULT_MATCHES) {
+    const id = `ko_${m.phase}_${m.order}`;
+    await fbSetDoc('ko_matches', id, {
+      id, phase: m.phase, order: m.order, dt: m.dt, local: m.local,
+      home: null, away: null, real_home: null, real_away: null
+    });
+  }
+}
+
+window.doLogout = async function() {
+  const { auth, signOut } = window.fb;
+  await signOut(auth);
+  currentUser = null; currentProfile = null;
+  allPalpites = {}; allExtras = {}; realScores = {}; realExtras = {}; manualLocks = {};
+  allDoubles = {}; allKoDoubles = {}; koMatches = []; allKoPalpites = {}; koLocks = {}; pointsAdjustments = {};
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+}
+
+function showErr(el, msg) { el.textContent = msg; el.classList.remove('hidden'); }
+
+// === DATA LOADING ===
+// Carrega só dados estáticos e do usuário atual (rápido, baixo consumo)
+let lastDataLoad = 0;
+const CACHE_TTL = 15 * 60 * 1000; // 15 minutos
+
+async function loadAllData(force) {
+  // Cache: se já carregou há menos de 15min e não foi forçado, reutiliza memória (economiza leituras)
+  if (!force && lastDataLoad && (Date.now() - lastDataLoad < CACHE_TTL)) {
+    return;
+  }
+  const { db, collection, getDocs, query, where } = window.fb;
+  
+  // Carrega dados estáticos do bolão (compartilhados por todos)
+  const [sc, rExt, locks, settings, ko, koLk, adj] = await Promise.all([
+    fbGetAll('resultados'),
+    fbGetAll('resultados_extras'),
+    fbGetAll('locks'),
+    fbGetDoc('settings', 'global'),
+    fbGetAll('ko_matches'),
+    fbGetAll('ko_locks'),
+    fbGetAll('points_adjustments')
+  ]);
+  
+  // Carrega só os dados do usuário atual via query filtrada (economia massiva)
+  const uid = currentUser.uid;
+  const [myPalp, myExt, myDbl, myKoP, myKoD] = await Promise.all([
+    queryUser('palpites', uid),
+    queryUser('palpites_extras', uid),
+    queryUser('doubles', uid),
+    queryUser('ko_palpites', uid),
+    queryUser('ko_doubles', uid)
+  ]);
+  
+  allPalpites = {};
+  myPalp.forEach(p => allPalpites[p.match_key] = {h: p.goals_home, a: p.goals_away});
+  allExtras = {};
+  myExt.forEach(e => allExtras[e.extra_key] = e.value);
+  realScores = {};
+  sc.forEach(s => realScores[s.id] = {h: s.goals_home, a: s.goals_away});
+  realExtras = {};
+  rExt.forEach(e => realExtras[e.id] = e.value);
+  manualLocks = {};
+  locks.forEach(l => manualLocks[l.id] = l.locked);
+  extrasLocked = settings?.extras_locked === true;
+  allDoubles = {};
+  myDbl.forEach(d => allDoubles[d.group] = d.match_key);
+  allKoDoubles = {};
+  myKoD.forEach(d => allKoDoubles[d.phase] = d.ko_key);
+  koMatches = ko.sort((a,b) => {
+    const phaseOrder = ['r32','r16','qf','sf','tp','fin'];
+    const pa = phaseOrder.indexOf(a.phase), pb = phaseOrder.indexOf(b.phase);
+    return pa - pb || (a.order||0) - (b.order||0);
+  });
+  allKoPalpites = {};
+  myKoP.forEach(p => allKoPalpites[p.ko_key] = {h: p.goals_home, a: p.goals_away});
+  koLocks = {};
+  koLk.forEach(l => koLocks[l.id] = l.locked);
+  pointsAdjustments = {};
+  adj.forEach(a => pointsAdjustments[a.uid] = {amount: a.amount, reason: a.reason});
+  // Listas de jogadores customizadas (se o admin editou)
+  const customLists = await fbGetDoc('settings', 'player_lists');
+  playerLists = customLists && customLists.lists ? customLists.lists : null;
+  lastDataLoad = Date.now();
+}
+
+// Helper: query Firestore with a where clause (carrega só dados do usuário específico)
+async function queryUser(coll, uid) {
+  const { db, collection, getDocs, query, where } = window.fb;
+  try {
+    const q = query(collection(db, coll), where('uid', '==', uid));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch (e) {
+    // Fallback: filtra manualmente se a query indexada falhar
+    const all = await fbGetAll(coll);
+    return all.filter(d => d.uid === uid);
+  }
+}
+
+// === LOCK LOGIC (auto: groups 24h, KO 1h) ===
+function isMatchLocked(match) {
+  if (manualLocks[match.key] === true) return true;
+  if (manualLocks[match.key] === false) return false;
+  const real = realScores[match.key];
+  if (real && real.h !== null && real.h !== undefined) return true;
+  const matchTime = new Date(match.dt).getTime();
+  const lockTime = matchTime - 24 * 60 * 60 * 1000; // 24h for groups
+  return Date.now() >= lockTime;
+}
+
+function isKoLocked(koMatch) {
+  if (koLocks[koMatch.id] === true) return true;
+  if (koLocks[koMatch.id] === false) return false;
+  if (koMatch.real_home !== null && koMatch.real_home !== undefined) return true;
+  if (!koMatch.dt) return false;
+  const matchTime = new Date(koMatch.dt).getTime();
+  const lockTime = matchTime - 1 * 60 * 60 * 1000; // 1h for knockout
+  return Date.now() >= lockTime;
+}
+
+function formatMatchDate(dtStr) {
+  if (!dtStr) return '';
+  const d = new Date(dtStr);
+  const days = ['dom','seg','ter','qua','qui','sex','sáb'];
+  const day = String(d.getDate()).padStart(2,'0');
+  const month = String(d.getMonth()+1).padStart(2,'0');
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${days[d.getDay()]} ${day}/${month} · ${h}h${m}`;
+}
+
+// === NAV ===
+function buildNav() {
+  const tabs = [
+    {id:'palpites', label:'Meus Palpites'},
+    {id:'classificacao', label:'Classificação'},
+    {id:'mata-mata', label:'Mata-mata'},
+    {id:'extras', label:'Prêmios Finais'},
+    {id:'ranking', label:'Ranking'},
+    {id:'meus-pontos', label:'Meus Pontos'},
+    {id:'regras', label:'Regras'},
+  ];
+  if (currentProfile.is_admin) tabs.push({id:'admin', label:'⚙ Admin'});
+  document.getElementById('nav-tabs').innerHTML = tabs.map(t => 
+    `<div class="nav-tab" id="tab-${t.id}" onclick="showTab('${t.id}')">${t.label}</div>`
+  ).join('');
+}
+
+window.refreshAll = async function() {
+  allUsersDataCache = null;
+  allUsersDataCacheTime = 0;
+  await loadAllData(true);
+  const activeTab = document.querySelector('.nav-tab.active');
+  const id = activeTab ? activeTab.id.replace('tab-', '') : 'palpites';
+  showTab(id);
+}
+
+window.showTab = async function(id) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('tab-' + id);
+  if (el) el.classList.add('active');
+  const c = document.getElementById('main-content');
+  c.innerHTML = `<div class="loading"><div class="spinner"></div>Carregando...</div>`;
+  await loadAllData();
+  if (id === 'palpites') c.innerHTML = renderPalpites();
+  else if (id === 'classificacao') c.innerHTML = renderClassificacao();
+  else if (id === 'mata-mata') c.innerHTML = renderMataMata();
+  else if (id === 'extras') c.innerHTML = renderExtras();
+  else if (id === 'ranking') renderRankingAsync(c);
+  else if (id === 'meus-pontos') c.innerHTML = renderMeusPontos();
+  else if (id === 'regras') c.innerHTML = renderRegras();
+  else if (id === 'admin') renderAdminAsync(c);
+  window.scrollTo(0, 0);
+}
+
+// === STANDINGS ===
+function calcStandings(scores, group) {
+  const teams = GROUPS[group].teams.map(t => t.n);
+  const matches = MATCHES.filter(m => m.g === group);
+  const table = {};
+  teams.forEach(t => table[t] = {name: t, flag: FLAG_BY_TEAM[t], pts:0, gf:0, ga:0, gd:0, w:0, d:0, l:0});
+  matches.forEach(m => {
+    const s = scores[m.key];
+    if (!s || s.h === null || s.h === undefined || s.a === null || s.a === undefined) return;
+    const h = parseInt(s.h), a = parseInt(s.a);
+    if (isNaN(h) || isNaN(a)) return;
+    table[m.h].gf += h; table[m.h].ga += a; table[m.h].gd += h-a;
+    table[m.a].gf += a; table[m.a].ga += h; table[m.a].gd += a-h;
+    if (h > a) { table[m.h].pts += 3; table[m.h].w++; table[m.a].l++; }
+    else if (h < a) { table[m.a].pts += 3; table[m.a].w++; table[m.h].l++; }
+    else { table[m.h].pts++; table[m.h].d++; table[m.a].pts++; table[m.a].d++; }
+  });
+  return Object.values(table).sort((a,b) => b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || a.name.localeCompare(b.name));
+}
+
+// === EXTRAS DEFINITION (NEW POINTS) ===
+const EXTRAS = [
+  {key:'champ', label:'Campeão', pts:40, type:'team'},
+  {key:'vice', label:'Vice-campeão', pts:30, type:'team'},
+  {key:'third', label:'3º lugar', pts:20, type:'team'},
+  {key:'fourth', label:'4º lugar', pts:10, type:'team'},
+  {key:'artilheiro', label:'Artilheiro (Chuteira de Ouro)', pts:15, type:'player', list:'artilheiro'},
+  {key:'bola_ouro', label:'Bola de Ouro (Melhor Jogador da Copa)', pts:15, type:'player', list:'bola_ouro'},
+  {key:'luva', label:'Luva de Ouro (Goleiro)', pts:10, type:'player', list:'luva'},
+];
+// === GROUP DOUBLE STATUS CHECK ===
+// A group's double is "locked" if the current chosen match is locked (can't change anymore)
+function isGroupDoubleLocked(group) {
+  const currentKey = allDoubles[group];
+  if (!currentKey) return false;
+  const m = MATCHES.find(mm => mm.key === currentKey);
+  return m ? isMatchLocked(m) : false;
+}
+
+// === RENDER: PALPITES ===
+function renderPalpites() {
+  // Global warning: groups without double chosen and not yet locked
+  const missingDoubles = Object.keys(GROUPS).filter(g => !allDoubles[g]);
+  let html = `<div class="banner">
+    <div class="banner-title">⚽ Faça seus palpites</div>
+    <div class="banner-text">Preencha os placares dos jogos. Em cada grupo, marque um jogo com ⭐ para valer o <b>dobro de pontos</b>. Palpites travam 24h antes da partida.</div>
+  </div>`;
+  if (missingDoubles.length) {
+    html += `<div class="warn-box" style="font-size:13px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:22px">⚠️</span>
+      <div><b>Atenção:</b> você ainda não escolheu o jogo dobro do${missingDoubles.length>1?'s grupo':' grupo'}${missingDoubles.length>1?'s':''} <b>${missingDoubles.join(', ')}</b>. Sem essa escolha, nenhum jogo do grupo dobra os pontos.</div>
+    </div>`;
+  }
+  const matchesByGroup = {};
+  MATCHES.forEach(m => { if (!matchesByGroup[m.g]) matchesByGroup[m.g] = []; matchesByGroup[m.g].push(m); });
+  Object.keys(matchesByGroup).sort().forEach(g => {
+    const matches = matchesByGroup[g].slice().sort((a,b) => new Date(a.dt) - new Date(b.dt));
+    const currentDouble = allDoubles[g];
+    const doubleMatch = currentDouble ? matches.find(m => m.key === currentDouble) : null;
+    const groupDoubleLocked = isGroupDoubleLocked(g);
+    let doubleStatus = '';
+    if (doubleMatch) {
+      doubleStatus = `⭐ Dobro: <b style="color:var(--gold-dark)">${doubleMatch.h} × ${doubleMatch.a}</b>${groupDoubleLocked?' 🔒':''}`;
+    } else {
+      doubleStatus = '<span style="color:var(--warn);font-weight:600">⚠️ Sem jogo dobro</span>';
+    }
+    html += `<div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span><span class="group-badge">${g}</span> Grupo ${g}</span>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;letter-spacing:0;font-weight:500;text-transform:none">${doubleStatus}</span>
+      </div>`;
+    matches.forEach(m => {
+      const p = allPalpites[m.key] || {};
+      const r = realScores[m.key] || {};
+      const hasReal = r.h !== null && r.h !== undefined;
+      const locked = isMatchLocked(m);
+      const isDouble = currentDouble === m.key;
+      
+      let earnedPts = null;
+      if (hasReal && p.h !== null && p.h !== undefined) {
+        earnedPts = calcMatchPoints(p, r);
+        if (isDouble) earnedPts *= 2;
+      }
+      
+      let statusHtml = '';
+      if (hasReal) statusHtml = `<span class="match-status result">Final ${r.h}×${r.a}</span>`;
+      else if (locked) statusHtml = '<span class="match-status locked">🔒 Bloqueado</span>';
+      else statusHtml = '<span class="match-status open">Aberto</span>';
+      
+      // Botão de dobro: bloqueado se grupo está com dobro travado OU este jogo está travado
+      let doubleBtn = '';
+      if (groupDoubleLocked) {
+        // O grupo já tem dobro travado em outro jogo (ou neste mesmo)
+        doubleBtn = isDouble ? '<span class="double-badge active">⭐ Dobro (travado)</span>' : '';
+      } else if (locked && !isDouble) {
+        // Este jogo travou mas não era o dobro - não pode marcar
+        doubleBtn = '';
+      } else if (locked && isDouble) {
+        // Era dobro e travou
+        doubleBtn = '<span class="double-badge active">⭐ Dobro (travado)</span>';
+      } else {
+        // Pode marcar/desmarcar livremente
+        doubleBtn = `<button class="double-btn${isDouble?' active':''}" onclick="toggleDouble('${g}','${m.key}')">${isDouble?'⭐ Dobro (remover)':'⭐ Marcar dobro'}</button>`;
+      }
+      
+      const ptsBadge = earnedPts !== null 
+        ? `<span class="earned-pts ${earnedPts>0?'positive':'zero'}">+${earnedPts} pts</span>` 
+        : '';
+      
+      html += `<div class="match-card${hasReal?' has-result':locked?' locked':''}${isDouble?' is-double':''}">
+        <div class="match-header">
+          <span class="match-date">📅 ${formatMatchDate(m.dt)}</span>
+          ${statusHtml}
+        </div>
+        <div class="match-row">
+          <span class="team"><span class="flag">${FLAG_BY_TEAM[m.h]}</span>${m.h}</span>
+          <div class="score-box">
+            <input class="score" type="number" min="0" max="30" value="${p.h??''}" placeholder="–"
+              data-key="${m.key}" data-side="h" onchange="savePalpite(this)" ${locked||hasReal?'disabled':''}>
+            <span class="sep">×</span>
+            <input class="score" type="number" min="0" max="30" value="${p.a??''}" placeholder="–"
+              data-key="${m.key}" data-side="a" onchange="savePalpite(this)" ${locked||hasReal?'disabled':''}>
+          </div>
+          <span class="team right">${m.a}<span class="flag">${FLAG_BY_TEAM[m.a]}</span></span>
+        </div>
+        ${hasReal ? `<div class="real-score-line">Resultado oficial: <b>${m.h} ${r.h} × ${r.a} ${m.a}</b></div>` : ''}
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div>${doubleBtn}</div>
+          ${ptsBadge}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  return html;
+}
+
+window.toggleDouble = async function(group, matchKey) {
+  if (isGroupDoubleLocked(group)) { alert('O jogo dobro deste grupo já foi travado e não pode ser alterado.'); return; }
+  const match = MATCHES.find(m => m.key === matchKey);
+  if (isMatchLocked(match)) { alert('Este jogo já está bloqueado.'); return; }
+  const wasSelected = allDoubles[group] === matchKey;
+  if (wasSelected) {
+    delete allDoubles[group];
+    await fbDelete('doubles', `${currentUser.uid}_${group}`);
+  } else {
+    allDoubles[group] = matchKey;
+    await fbSetDoc('doubles', `${currentUser.uid}_${group}`, {uid: currentUser.uid, group, match_key: matchKey});
+  }
+  document.getElementById('main-content').innerHTML = renderPalpites();
+  flashSave();
+}
+
+// === MATCH POINTS ===
+function calcMatchPoints(palpite, real) {
+  if (!palpite || palpite.h === null || palpite.h === undefined) return 0;
+  if (!real || real.h === null || real.h === undefined) return 0;
+  const ph = parseInt(palpite.h), pa = parseInt(palpite.a);
+  const rh = parseInt(real.h), ra = parseInt(real.a);
+  if (isNaN(ph)||isNaN(pa)||isNaN(rh)||isNaN(ra)) return 0;
+  let pts = 0;
+  if (ph === rh) pts += 1;
+  if (pa === ra) pts += 1;
+  if (ph - pa === rh - ra) pts += 2;
+  const rw = rh > ra ? 'h' : rh < ra ? 'a' : 'd';
+  const pw = ph > pa ? 'h' : ph < pa ? 'a' : 'd';
+  if (rw === pw) pts += 2;
+  return pts;
+}
+
+// === RENDER: CLASSIFICACAO ===
+function renderClassificacao() {
+  let html = `<div class="banner">
+    <div class="banner-title">🏆 Classificação dos grupos</div>
+    <div class="banner-text">Calculada automaticamente pelos seus palpites. 1º e 2º lugares valem pontos extra.</div>
+  </div>
+  <div class="info-box"><b>Desempates:</b> Pontos → Saldo de gols → Gols marcados → Ordem alfabética</div>
+  <div class="groups-grid">`;
+  Object.keys(GROUPS).forEach(g => {
+    const standings = calcStandings(allPalpites, g);
+    html += `<div class="group-card">
+      <div class="group-label"><span class="gbadge">${g}</span> Grupo ${g}</div>`;
+    standings.forEach((t, i) => {
+      html += `<div class="standing">
+        <span class="standing-pos pos-${i+1}">${i+1}</span>
+        <span class="standing-flag">${t.flag}</span>
+        <span class="standing-team" style="font-size:12px;font-weight:${i<2?'600':'400'}">${t.name}</span>
+        <span class="standing-pts">${t.pts}pts</span>
+        <span class="standing-detail">${t.gd>=0?'+':''}${t.gd} · ${t.gf}g</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+// === RENDER: MATA-MATA ===
+function isKoPhaseDoubleLocked(phase) {
+  const currentKey = allKoDoubles[phase];
+  if (!currentKey) return false;
+  const m = koMatches.find(km => km.id === currentKey);
+  return m ? isKoLocked(m) : false;
+}
+
+function renderMataMata() {
+  let html = `<div class="banner">
+    <div class="banner-title">🏆 Mata-mata</div>
+    <div class="banner-text">Palpite o placar de cada jogo (o resultado oficial inclui a prorrogação, se houver). Você marca 1 jogo dobro nas <b>16 avos, oitavas e quartas</b>. Semis ×2 e Final ×3 para todos.</div>
+  </div>`;
+  
+  if (!koMatches.length) {
+    html += `<div class="card" style="text-align:center;padding:2.5rem 1rem">
+      <div style="font-size:48px;margin-bottom:.5rem">⏳</div>
+      <h3 style="font-family:'Bebas Neue';font-size:22px;color:var(--green);letter-spacing:1px;margin-bottom:.5rem">Aguardando configuração</h3>
+      <p style="color:var(--muted);font-size:13px">O administrador ainda não configurou os jogos do mata-mata.</p>
+    </div>`;
+    return html;
+  }
+  
+  // Fases que permitem dobro: 16 avos, oitavas, quartas
+  const DOUBLE_PHASES = ['r32', 'r16', 'qf'];
+  
+  KO_PHASES.forEach(phase => {
+    const phaseMatches = koMatches.filter(m => m.phase === phase.id);
+    if (!phaseMatches.length) return;
+    const multBadge = phase.multiplier > 1 ? ` <span class="phase-mult">×${phase.multiplier}</span>` : '';
+    const allowDouble = DOUBLE_PHASES.includes(phase.id);
+    const phaseDoubleKey = allowDouble ? allKoDoubles[phase.id] : null;
+    const phaseDoubleLocked = allowDouble ? isKoPhaseDoubleLocked(phase.id) : false;
+    const phaseDoubleMatch = phaseDoubleKey ? phaseMatches.find(m => m.id === phaseDoubleKey) : null;
+    let phaseDoubleStatus = '';
+    if (allowDouble) {
+      if (phaseDoubleMatch) {
+        phaseDoubleStatus = `⭐ Dobro: <b style="color:var(--gold-dark)">${phaseDoubleMatch.home||'?'} × ${phaseDoubleMatch.away||'?'}</b>${phaseDoubleLocked?' 🔒':''}`;
+      } else if (phaseMatches.some(m => !isKoLocked(m))) {
+        phaseDoubleStatus = '<span style="color:var(--warn);font-weight:600">⚠️ Sem jogo dobro</span>';
+      }
+    } else {
+      // Fase sem dobro do apostador
+      if (phase.multiplier > 1) {
+        phaseDoubleStatus = `<span style="color:var(--muted)">Multiplicador ×${phase.multiplier} para todos</span>`;
+      }
+    }
+    
+    html += `<div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span>${phase.label}${multBadge}</span>
+        <span style="font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;letter-spacing:0;font-weight:500;text-transform:none">${phaseDoubleStatus}</span>
+      </div>`;
+    phaseMatches.forEach(m => {
+      const pal = allKoPalpites[m.id] || {};
+      const hasReal = m.real_home !== null && m.real_home !== undefined;
+      const locked = isKoLocked(m);
+      const ph = pal.h, pa = pal.a;
+      const isDouble = phaseDoubleKey === m.id;
+      
+      let earnedPts = null;
+      if (hasReal && ph !== null && ph !== undefined) {
+        earnedPts = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+        if (isDouble) earnedPts *= 2;
+        earnedPts *= phase.multiplier;
+      }
+      
+      let statusHtml = '';
+      if (hasReal) statusHtml = `<span class="match-status result">Final ${m.real_home}×${m.real_away}</span>`;
+      else if (locked) statusHtml = '<span class="match-status locked">🔒 Bloqueado</span>';
+      else statusHtml = '<span class="match-status open">Aberto</span>';
+      
+      let doubleBtn = '';
+      if (allowDouble && m.home && m.away) {
+        if (phaseDoubleLocked) {
+          doubleBtn = isDouble ? '<span class="double-badge active">⭐ Dobro (travado)</span>' : '';
+        } else if (locked && !isDouble) {
+          doubleBtn = '';
+        } else if (locked && isDouble) {
+          doubleBtn = '<span class="double-badge active">⭐ Dobro (travado)</span>';
+        } else {
+          doubleBtn = `<button class="double-btn${isDouble?' active':''}" onclick="toggleKoDouble('${phase.id}','${m.id}')">${isDouble?'⭐ Dobro (remover)':'⭐ Marcar dobro'}</button>`;
+        }
+      }
+      
+      const ptsBadge = earnedPts !== null 
+        ? `<span class="earned-pts ${earnedPts>0?'positive':'zero'}">+${earnedPts} pts</span>` 
+        : '';
+      
+      html += `<div class="match-card${hasReal?' has-result':locked?' locked':''}${isDouble?' is-double':''}">
+        <div class="match-header">
+          <span class="match-date">${m.dt?'📅 '+formatMatchDate(m.dt):'⏱ Data a definir'} ${m.local?'· '+m.local:''}</span>
+          ${statusHtml}
+        </div>
+        <div class="match-row">
+          <span class="team"><span class="flag">${FLAG_BY_TEAM[m.home]||''}</span>${m.home||'A definir'}</span>
+          <div class="score-box">
+            <input class="score" type="number" min="0" max="30" value="${ph??''}" placeholder="–"
+              data-kokey="${m.id}" data-koside="h" onchange="saveKoPalpite(this)" ${locked||hasReal||!m.home?'disabled':''}>
+            <span class="sep">×</span>
+            <input class="score" type="number" min="0" max="30" value="${pa??''}" placeholder="–"
+              data-kokey="${m.id}" data-koside="a" onchange="saveKoPalpite(this)" ${locked||hasReal||!m.home?'disabled':''}>
+          </div>
+          <span class="team right">${m.away||'A definir'}<span class="flag">${FLAG_BY_TEAM[m.away]||''}</span></span>
+        </div>
+        ${hasReal ? `<div class="real-score-line">Resultado oficial: <b>${m.home} ${m.real_home} × ${m.real_away} ${m.away}</b></div>` : ''}
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div>${doubleBtn}</div>
+          ${ptsBadge}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  
+  return html;
+}
+
+window.saveKoPalpite = async function(el) {
+  const koId = el.dataset.kokey;
+  const side = el.dataset.koside;
+  const val = el.value === '' ? null : parseInt(el.value);
+  const m = koMatches.find(km => km.id === koId);
+  if (!m || isKoLocked(m)) { el.disabled = true; return; }
+  if (!allKoPalpites[koId]) allKoPalpites[koId] = {};
+  allKoPalpites[koId][side] = val;
+  await fbSetDoc('ko_palpites', `${currentUser.uid}_${koId}`, {
+    uid: currentUser.uid, ko_key: koId,
+    goals_home: allKoPalpites[koId].h ?? null,
+    goals_away: allKoPalpites[koId].a ?? null
+  });
+  flashSave();
+}
+
+window.toggleKoDouble = async function(phase, koId) {
+  // Dobro só permitido em 16 avos, oitavas e quartas
+  if (!['r32','r16','qf'].includes(phase)) {
+    alert('Dobro só é permitido em 16 avos, oitavas e quartas.');
+    return;
+  }
+  if (isKoPhaseDoubleLocked(phase)) { alert('O jogo dobro desta fase já foi travado.'); return; }
+  const m = koMatches.find(km => km.id === koId);
+  if (!m || isKoLocked(m)) { alert('Este jogo já está bloqueado.'); return; }
+  const wasSelected = allKoDoubles[phase] === koId;
+  if (wasSelected) {
+    delete allKoDoubles[phase];
+    await fbDelete('ko_doubles', `${currentUser.uid}_${phase}`);
+  } else {
+    allKoDoubles[phase] = koId;
+    await fbSetDoc('ko_doubles', `${currentUser.uid}_${phase}`, {uid: currentUser.uid, phase, ko_key: koId});
+  }
+  document.getElementById('main-content').innerHTML = renderMataMata();
+  flashSave();
+}
+
+// === RENDER: EXTRAS ===
+function renderExtras() {
+  let html = `<div class="banner">
+    <div class="banner-title">🏅 Prêmios finais do torneio</div>
+    <div class="banner-text">Acerte campeão, artilheiro e outros prêmios para somar muitos pontos. Estes palpites serão bloqueados antes do primeiro jogo da Copa.</div>
+  </div>`;
+  if (extrasLocked) {
+    html += `<div class="warn-box"><b>🔒 Palpites finais bloqueados.</b> O prazo para alterações foi encerrado.</div>`;
+  }
+  EXTRAS.forEach(e => {
+    const val = allExtras[e.key] || '';
+    const realVal = realExtras[e.key] || '';
+    const isCorrect = val && realVal && val.toLowerCase().trim() === realVal.toLowerCase().trim();
+    const hasReal = !!realVal;
+    
+    let earnedHtml = '';
+    if (hasReal) {
+      earnedHtml = isCorrect 
+        ? `<span class="earned-pts positive">+${e.pts} pts</span>`
+        : `<span class="earned-pts zero">0 pts</span>`;
+    }
+    
+    html += `<div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span>${e.label} <span class="pts-badge">+${e.pts}pts</span></span>
+        ${earnedHtml}
+      </div>`;
+    if (hasReal) {
+      html += `<div class="real-score-line" style="margin-bottom:.75rem">Resultado oficial: <b>${realVal}</b></div>`;
+    }
+    if (e.type === 'team') {
+      html += `<select data-ex="${e.key}" onchange="saveExtra(this)" ${extrasLocked||hasReal?'disabled':''} style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;background:${extrasLocked||hasReal?'#f5f5f5':'var(--bg)'};">
+        <option value="">— escolha uma seleção</option>
+        ${ALL_TEAMS_SORTED.map(t => `<option value="${t}"${val===t?' selected':''}>${FLAG_BY_TEAM[t]} ${t}</option>`).join('')}
+      </select>`;
+    } else {
+      const list = getPlayerList(e.list);
+      html += `<div class="player-grid">`;
+      list.forEach(p => {
+        html += `<label class="player-option${val===p?' selected':''}${extrasLocked||hasReal?' disabled-option':''}">
+          <input type="radio" name="ex_${e.key}" value="${p}" ${val===p?'checked':''} ${extrasLocked||hasReal?'disabled':''} onchange="saveExtra(this)" data-ex="${e.key}">
+          <span>${p}</span>
+        </label>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  });
+  return html;
+}
+
+window.saveExtra = async function(el) {
+  if (extrasLocked) { alert('Os palpites de prêmios finais estão bloqueados.'); return; }
+  const key = el.dataset.ex;
+  let val = el.value;
+  document.querySelectorAll(`[data-ex="${key}"]`).forEach(opt => {
+    const lbl = opt.closest('.player-option');
+    if (lbl) lbl.classList.toggle('selected', opt === el);
+  });
+  if (val && /^[\u{1F1E6}-\u{1F1FF}\u{1F3F4}]/u.test(val)) {
+    val = val.replace(/^[\u{1F1E6}-\u{1F1FF}\u{1F3F4}\u{E0061}-\u{E007F}]+\s*/u, '');
+  }
+  allExtras[key] = val;
+  await fbSetDoc('palpites_extras', `${currentUser.uid}_${key}`, {uid: currentUser.uid, extra_key: key, value: val});
+  flashSave();
+}
+// === POINTS CALCULATION ===
+function calcUserPoints(palpites, extras, userDoubles, userKoPalpites, userKoDoubles) {
+  let pts = 0;
+  userDoubles = userDoubles || {};
+  userKoPalpites = userKoPalpites || {};
+  userKoDoubles = userKoDoubles || {};
+  
+  // Group stage matches
+  MATCHES.forEach(m => {
+    const real = realScores[m.key];
+    if (!real || real.h === null || real.h === undefined) return;
+    const pal = palpites[m.key];
+    if (!pal || pal.h === null || pal.h === undefined) return;
+    let matchPts = calcMatchPoints(pal, real);
+    if (userDoubles[m.g] === m.key) matchPts *= 2;
+    pts += matchPts;
+  });
+  
+  // Group standings - SÓ conta quando TODOS os 6 jogos do grupo terminaram
+  // (evita pontos instáveis durante a Copa)
+  Object.keys(GROUPS).forEach(g => {
+    const groupMatches = MATCHES.filter(m => m.g === g);
+    const allFinished = groupMatches.every(m => {
+      const r = realScores[m.key];
+      return r && r.h !== null && r.h !== undefined;
+    });
+    if (!allFinished) return;
+    const realStand = calcStandings(realScores, g);
+    const palStand = calcStandings(palpites, g);
+    if (realStand.length < 2 || palStand.length < 2) return;
+    const r1 = realStand[0]?.name, r2 = realStand[1]?.name;
+    const p1 = palStand[0]?.name, p2 = palStand[1]?.name;
+    if (p1 === r1) pts += 2;
+    if (p2 === r2) pts += 2;
+    if (p1 !== p2 && p1 === r2 && p2 === r1) pts += 1;
+  });
+  
+  // Final extras
+  EXTRAS.forEach(e => {
+    const pv = (extras[e.key]||'').toLowerCase().trim();
+    const rv = (realExtras[e.key]||'').toLowerCase().trim();
+    if (pv && rv && pv === rv) pts += e.pts;
+  });
+  
+  // Knockout — dobro do apostador só em r32, r16, qf
+  const KO_DOUBLE_PHASES = ['r32', 'r16', 'qf'];
+  KO_PHASES.forEach(phase => {
+    const phaseMatches = koMatches.filter(km => km.phase === phase.id);
+    phaseMatches.forEach(m => {
+      if (m.real_home === null || m.real_home === undefined) return;
+      const pal = userKoPalpites[m.id];
+      if (!pal || pal.h === null || pal.h === undefined) return;
+      let p = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+      if (KO_DOUBLE_PHASES.includes(phase.id) && userKoDoubles[phase.id] === m.id) p *= 2;
+      p *= phase.multiplier;
+      pts += p;
+    });
+  });
+  
+  return pts;
+}
+
+// === CACHE DE DADOS DE TODOS OS USUÁRIOS (ranking/admin) ===
+let allUsersDataCache = null;
+let allUsersDataCacheTime = 0;
+
+async function getAllUsersData(force) {
+  // Reutiliza cache se carregado há menos de 15min e não forçado
+  if (!force && allUsersDataCache && (Date.now() - allUsersDataCacheTime < CACHE_TTL)) {
+    return allUsersDataCache;
+  }
+  const [users, allP, allE, allD, allKoP, allKoD] = await Promise.all([
+    fbGetAll('users'), fbGetAll('palpites'), fbGetAll('palpites_extras'),
+    fbGetAll('doubles'), fbGetAll('ko_palpites'), fbGetAll('ko_doubles')
+  ]);
+  allUsersDataCache = {users, allP, allE, allD, allKoP, allKoD};
+  allUsersDataCacheTime = Date.now();
+  return allUsersDataCache;
+}
+
+function refreshTimestamp(cacheTime) {
+  if (!cacheTime) return 'agora';
+  const secs = Math.floor((Date.now() - cacheTime) / 1000);
+  if (secs < 60) return 'há ' + secs + 's';
+  const mins = Math.floor(secs / 60);
+  return 'há ' + mins + 'min';
+}
+
+// === STANDINGS PRÉ-COMPUTADOS (otimização de leituras) ===
+// O ranking é salvo num único doc settings/standings.
+// Participantes leem 1 doc (1 leitura) em vez de todos os palpites (~3000 leituras).
+// Recalculado pelo admin quando insere resultados.
+// Métricas do participante para o ranking (jogos já decididos):
+//  - dobrosFeitos: quantos jogos marcados como dobro já tiveram resultado
+//  - aprov: aproveitamento % = pontos feitos / máximo possível nos jogos decididos que palpitou
+//    (considera os multiplicadores de dobro e de fase, no numerador e no máximo)
+function calcUserMetrics(uPal, uDbl, uKo, uKoDbl) {
+  let ptsFeitos = 0, ptsMax = 0, dobrosFeitos = 0;
+  const KO_DBL = ['r32','r16','qf'];
+  MATCHES.forEach(m => {
+    const real = realScores[m.key];
+    if (!real || real.h === null || real.h === undefined) return;
+    const pal = uPal[m.key];
+    const isDbl = uDbl[m.g] === m.key;
+    if (isDbl) dobrosFeitos++;
+    if (!pal || pal.h === null || pal.h === undefined) return;
+    const mult = isDbl ? 2 : 1;
+    ptsFeitos += calcMatchPoints(pal, real) * mult;
+    ptsMax += 6 * mult;
+  });
+  KO_PHASES.forEach(phase => {
+    koMatches.filter(km => km.phase === phase.id).forEach(m => {
+      if (m.real_home === null || m.real_home === undefined) return;
+      const pal = uKo[m.id];
+      const isDbl = KO_DBL.includes(phase.id) && uKoDbl[phase.id] === m.id;
+      if (isDbl) dobrosFeitos++;
+      if (!pal || pal.h === null || pal.h === undefined) return;
+      const mult = (isDbl ? 2 : 1) * phase.multiplier;
+      ptsFeitos += calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away}) * mult;
+      ptsMax += 6 * mult;
+    });
+  });
+  const aprov = ptsMax > 0 ? Math.round(ptsFeitos / ptsMax * 100) : null;
+  return {dobrosFeitos, ptsFeitos, ptsMax, aprov};
+}
+
+async function recomputeStandings(forceReload) {
+  const data = await getAllUsersData(forceReload);
+  const {users, allP, allE, allD, allKoP, allKoD} = data;
+  const list = users.filter(u => !u.is_admin).map(u => {
+    const uPal = {}, uEx = {}, uDbl = {}, uKo = {}, uKoDbl = {};
+    allP.filter(p => p.uid === u.uid).forEach(p => uPal[p.match_key] = {h: p.goals_home, a: p.goals_away});
+    allE.filter(e => e.uid === u.uid).forEach(e => uEx[e.extra_key] = e.value);
+    allD.filter(d => d.uid === u.uid).forEach(d => uDbl[d.group] = d.match_key);
+    allKoP.filter(k => k.uid === u.uid).forEach(k => uKo[k.ko_key] = {h:k.goals_home,a:k.goals_away});
+    allKoD.filter(d => d.uid === u.uid).forEach(d => uKoDbl[d.phase] = d.ko_key);
+    const basePts = calcUserPoints(uPal, uEx, uDbl, uKo, uKoDbl);
+    const adj = pointsAdjustments[u.uid]?.amount || 0;
+    const met = calcUserMetrics(uPal, uDbl, uKo, uKoDbl);
+    return {uid: u.uid, nickname: u.nickname || u.email, basePts, adj, pts: basePts + adj,
+            dobrosFeitos: met.dobrosFeitos, ptsFeitos: met.ptsFeitos, ptsMax: met.ptsMax, aprov: met.aprov};
+  }).sort((a,b) => b.pts - a.pts);
+  await fbSetDoc('settings', 'standings', {computedAt: Date.now(), list});
+  return list;
+}
+
+// Recompute com debounce: vários saves seguidos do admin = 1 só recálculo (3s após o último)
+let recomputeTimer = null;
+function scheduleRecompute() {
+  clearTimeout(recomputeTimer);
+  recomputeTimer = setTimeout(async () => {
+    try { await recomputeStandings(false); } catch (e) { console.warn('Recompute adiado falhou', e); }
+  }, 3000);
+}
+
+// Carrega dados de UM único usuário (para ver palpites no detalhe) — barato
+async function queryOneUser(uid) {
+  const [palp, ext, dbl, koP, koD] = await Promise.all([
+    queryUser('palpites', uid), queryUser('palpites_extras', uid), queryUser('doubles', uid),
+    queryUser('ko_palpites', uid), queryUser('ko_doubles', uid)
+  ]);
+  const uPal = {}, uEx = {}, uDbl = {}, uKo = {}, uKoDbl = {};
+  palp.forEach(p => uPal[p.match_key] = {h: p.goals_home, a: p.goals_away});
+  ext.forEach(e => uEx[e.extra_key] = e.value);
+  dbl.forEach(d => uDbl[d.group] = d.match_key);
+  koP.forEach(k => uKo[k.ko_key] = {h:k.goals_home,a:k.goals_away});
+  koD.forEach(d => uKoDbl[d.phase] = d.ko_key);
+  return {uPal, uEx, uDbl, uKo, uKoDbl};
+}
+
+// Botão "Atualizar" do ranking (precisa estar em window para o onclick achar)
+window.refreshRanking = function() {
+  const isAdmin = currentProfile && currentProfile.is_admin;
+  renderRankingAsync(document.getElementById('main-content'), !!isAdmin);
+}
+
+// === RANKING ===
+// Lê o doc pré-computado settings/standings (1 leitura) em vez de todos os palpites.
+// Se o admin clicar em atualizar, recalcula (lê todos + salva o doc).
+async function renderRankingAsync(c, forceRecompute) {
+  try {
+    await _renderRankingInner(c, forceRecompute);
+  } catch (e) {
+    console.error('Erro ao renderizar ranking', e);
+    c.innerHTML = `<div class="banner"><div class="banner-title">🏆 Ranking geral</div></div>
+      <div class="card" style="text-align:center;padding:1.5rem">
+        <p style="color:var(--muted);margin-bottom:1rem">Não foi possível carregar o ranking agora.</p>
+        <button class="btn btn-green btn-sm" onclick="showTab('ranking')">🔄 Tentar de novo</button>
+      </div>`;
+  }
+}
+
+async function _renderRankingInner(c, forceRecompute) {
+  c.innerHTML = `<div class="loading"><div class="spinner"></div>Carregando ranking...</div>`;
+  const isAdmin = currentProfile.is_admin;
+  let standingsDoc = null;
+  let ranked = [];
+  let computedAt = 0;
+
+  if (forceRecompute && isAdmin) {
+    // Admin força recálculo (lê todos os palpites uma vez e salva o doc)
+    ranked = await recomputeStandings(true);
+    computedAt = Date.now();
+  } else {
+    // Qualquer um: lê o doc pré-computado (1 leitura)
+    standingsDoc = await fbGetDoc('settings', 'standings');
+    if (standingsDoc && standingsDoc.list) {
+      ranked = standingsDoc.list;
+      computedAt = standingsDoc.computedAt || 0;
+    } else if (isAdmin) {
+      // Doc não existe ainda — admin computa pela primeira vez
+      ranked = await recomputeStandings(true);
+      computedAt = Date.now();
+    }
+  }
+
+  // Garante que o próprio usuário apareça mesmo se o doc estiver vazio/desatualizado
+  const meInList = ranked.some(r => r.uid === currentUser.uid);
+  if (!meInList && !currentProfile.is_admin) {
+    const myPts = calcUserPoints(allPalpites, allExtras, allDoubles, allKoPalpites, allKoDoubles);
+    const myAdj = pointsAdjustments[currentUser.uid]?.amount || 0;
+    ranked = ranked.concat([{uid: currentUser.uid, nickname: currentProfile.nickname, basePts: myPts, adj: myAdj, pts: myPts + myAdj}]);
+    ranked.sort((a,b) => b.pts - a.pts);
+  }
+
+  const ageMin = computedAt ? Math.floor((Date.now() - computedAt) / 60000) : null;
+  const ageLabel = computedAt ? (ageMin < 1 ? 'agora há pouco' : 'há ' + ageMin + ' min') : 'ainda não calculado';
+
+  let html = `<div class="banner">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+      <div>
+        <div class="banner-title">🏆 Ranking geral</div>
+        <div class="banner-text">${ranked.length} participante${ranked.length!==1?'s':''} · pontuação calculada ${ageLabel}</div>
+      </div>
+      <button class="btn btn-sm btn-outline" onclick="refreshRanking()">🔄 Atualizar</button>
+    </div>
+  </div>`;
+  if (isAdmin) {
+    html += `<div class="info-box" style="font-size:12px">Como admin, clicar em "Atualizar" <b>recalcula</b> a pontuação de todos e salva. Faça isso após inserir resultados. Para os participantes, o ranking é leve (lê só o resultado já calculado).</div>`;
+  } else {
+    html += `<div class="info-box" style="font-size:12px">Clique em qualquer participante para ver os palpites dos jogos já travados.</div>`;
+  }
+  html += `<div class="card">`;
+  if (!ranked.length) {
+    html += `<p style="text-align:center;color:var(--muted);padding:2rem">Ranking ainda não calculado. ${isAdmin?'Clique em "Atualizar" para gerar.':'Aguarde o administrador inserir resultados.'}</p>`;
+  } else {
+    ranked.forEach((r, i) => {
+      const isYou = r.uid === currentUser.uid;
+      const initials = (r.nickname||'?').substring(0,2).toUpperCase();
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      const adjLabel = r.adj !== 0 ? `<small style="color:${r.adj>0?'var(--success)':'var(--danger)'}">${r.adj>0?'+':''}${r.adj} ajuste</small>` : '';
+      const metaParts = [];
+      if (r.aprov !== null && r.aprov !== undefined) metaParts.push(`📊 ${r.aprov}% aproveit.`);
+      if (r.dobrosFeitos) metaParts.push(`⭐ ${r.dobrosFeitos} dobro${r.dobrosFeitos>1?'s':''}`);
+      const metaLabel = metaParts.length ? `<small style="color:var(--muted)">${metaParts.join(' · ')}</small>` : '';
+      html += `<div class="rank-row${i===0?' top-1':''} clickable" onclick="showUserDetail('${r.uid}','${(r.nickname||'').replace(/'/g,"\\'")}','ranking')">
+        <div class="rank-num${i<3?' top':''}">${i+1}</div>
+        <div class="rank-avatar">${initials}</div>
+        <div class="rank-name">${r.nickname}${isYou?'<span class="you-badge">você</span>':''}
+          <small>${medal} ${i===0?'Líder':i===1?'2º lugar':i===2?'3º lugar':''} ${adjLabel}</small>
+          ${metaLabel}
+        </div>
+        <div class="rank-pts">${r.pts}<small> pts</small></div>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+  c.innerHTML = html;
+}
+
+// === DETAIL VIEW (shown when clicking on user in ranking) ===
+window.showUserDetail = async function(uid, nickname, origin) {
+  window._detailOrigin = origin || 'ranking';
+  const c = document.getElementById('main-content');
+  c.innerHTML = `<div class="loading"><div class="spinner"></div>Carregando palpites de ${nickname}...</div>`;
+  // Carrega só os dados deste participante (barato) em vez de todos
+  const {uPal, uEx, uDbl, uKo, uKoDbl} = await queryOneUser(uid);
+  const totalPts = calcUserPoints(uPal, uEx, uDbl, uKo, uKoDbl);
+  const adj = pointsAdjustments[uid]?.amount || 0;
+  
+  const isAdminViewing = currentProfile.is_admin;
+  const isOwnView = uid === currentUser.uid;
+  
+  let html = `<div class="banner">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="banner-title">👤 ${nickname}</div>
+        <div class="banner-text">${totalPts + adj} pts total${adj!==0?` (${totalPts} base + ${adj} ajuste)`:''}</div>
+      </div>
+      <button class="btn-logout" onclick="backFromDetail()">← Voltar</button>
+    </div>
+  </div>`;
+  
+  if (!isOwnView && !isAdminViewing) {
+    html += `<div class="info-box"><b>Privacidade:</b> Você só vê os palpites de jogos já bloqueados (24h antes do início para grupos, 1h para mata-mata).</div>`;
+  }
+  
+  // Fase de grupos
+  html += `<div class="card"><div class="card-title">⚽ Fase de grupos</div>`;
+  const matchesByGroup = {};
+  MATCHES.forEach(m => { if (!matchesByGroup[m.g]) matchesByGroup[m.g] = []; matchesByGroup[m.g].push(m); });
+  let anyShown = false;
+  Object.keys(matchesByGroup).sort().forEach(g => {
+    const matches = matchesByGroup[g].slice().sort((a,b) => new Date(a.dt) - new Date(b.dt));
+    let rowsHtml = '';
+    matches.forEach(m => {
+      const showThis = isAdminViewing || isOwnView || isMatchLocked(m);
+      if (!showThis) return;
+      anyShown = true;
+      const p = uPal[m.key] || {};
+      const r = realScores[m.key];
+      const hasR = r && r.h !== null && r.h !== undefined;
+      const hasP = p.h !== null && p.h !== undefined;
+      const isDbl = uDbl[g] === m.key;
+      let earned = null;
+      if (hasR && hasP) {
+        earned = calcMatchPoints(p, r);
+        if (isDbl) earned *= 2;
+      }
+      const palStr = hasP ? `<b>${p.h}×${p.a}</b>` : '<i style="color:var(--muted)">sem palpite</i>';
+      const realStr = hasR ? `${r.h}×${r.a}` : '—';
+      rowsHtml += `<div class="pts-row">
+        <span class="pts-row-label">${FLAG_BY_TEAM[m.h]} ${m.h} ${palStr} ${m.a} ${FLAG_BY_TEAM[m.a]}${isDbl?' ⭐':''}</span>
+        <span class="pts-row-real">Real: ${realStr}</span>
+        ${earned!==null?`<span class="pts-row-value ${earned>0?'positive':'zero'}">${earned>0?'+':''}${earned}</span>`:'<span></span>'}
+      </div>`;
+    });
+    if (rowsHtml) html += `<div class="pts-group"><div class="pts-group-header"><b>Grupo ${g}</b></div>${rowsHtml}</div>`;
+  });
+  if (!anyShown) html += `<p style="color:var(--muted);font-size:13px;padding:.5rem 0;text-align:center">Nenhum jogo bloqueado ainda.</p>`;
+  html += `</div>`;
+  
+  // Mata-mata
+  let koHtml = '';
+  const KO_DBL_PHASES = ['r32','r16','qf'];
+  KO_PHASES.forEach(phase => {
+    const phaseMatches = koMatches.filter(km => km.phase === phase.id);
+    let rows = '';
+    phaseMatches.forEach(m => {
+      const showThis = isAdminViewing || isOwnView || isKoLocked(m);
+      if (!showThis) return;
+      const pal = uKo[m.id] || {};
+      const hasR = m.real_home !== null && m.real_home !== undefined;
+      const hasP = pal.h !== null && pal.h !== undefined;
+      const isDbl = KO_DBL_PHASES.includes(phase.id) && uKoDbl[phase.id] === m.id;
+      let earned = null;
+      if (hasR && hasP) {
+        earned = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+        if (isDbl) earned *= 2;
+        earned *= phase.multiplier;
+      }
+      const palStr = hasP ? `<b>${pal.h}×${pal.a}</b>` : '<i>sem palpite</i>';
+      const realStr = hasR ? `${m.real_home}×${m.real_away}` : '—';
+      rows += `<div class="pts-row">
+        <span class="pts-row-label">${FLAG_BY_TEAM[m.home]||''} ${m.home||'?'} ${palStr} ${m.away||'?'} ${FLAG_BY_TEAM[m.away]||''}${isDbl?' ⭐':''}</span>
+        <span class="pts-row-real">${realStr}</span>
+        ${earned!==null?`<span class="pts-row-value ${earned>0?'positive':'zero'}">${earned>0?'+':''}${earned}</span>`:'<span></span>'}
+      </div>`;
+    });
+    if (rows) koHtml += `<div class="pts-group"><div class="pts-group-header"><b>${phase.label}</b></div>${rows}</div>`;
+  });
+  if (koHtml) html += `<div class="card"><div class="card-title">🏆 Mata-mata</div>${koHtml}</div>`;
+  
+  // Extras
+  if (extrasLocked || isAdminViewing || isOwnView) {
+    html += `<div class="card"><div class="card-title">🏅 Prêmios finais</div><div class="pts-group">`;
+    EXTRAS.forEach(e => {
+      const pv = uEx[e.key] || '';
+      const rv = realExtras[e.key] || '';
+      const correct = pv && rv && pv.toLowerCase().trim() === rv.toLowerCase().trim();
+      html += `<div class="pts-row">
+        <span class="pts-row-label"><b>${e.label}</b><br><small>${pv || '<i style="color:var(--muted)">sem palpite</i>'}</small></span>
+        ${rv?`<span class="pts-row-real">Real: ${rv}</span>`:'<span class="pts-row-real" style="color:var(--muted)">—</span>'}
+        ${rv?`<span class="pts-row-value ${correct?'positive':'zero'}">${correct?'+'+e.pts:'0'}</span>`:'<span></span>'}
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+  
+  c.innerHTML = html;
+  window.scrollTo(0, 0);
+}
+
+// === MEUS PONTOS ===
+function renderMeusPontos() {
+  let html = `<div class="banner">
+    <div class="banner-title">📊 Meus pontos detalhados</div>
+    <div class="banner-text">Veja cada palpite com a pontuação que você ganhou. Os pontos aparecem após o admin inserir o resultado oficial.</div>
+  </div>`;
+  
+  let totalGroup = 0, totalKo = 0, totalStand = 0, totalExt = 0;
+  const adj = pointsAdjustments[currentUser.uid]?.amount || 0;
+  
+  // Group matches
+  html += `<div class="card"><div class="card-title">⚽ Fase de grupos</div>`;
+  const matchesByGroup = {};
+  MATCHES.forEach(m => { if (!matchesByGroup[m.g]) matchesByGroup[m.g] = []; matchesByGroup[m.g].push(m); });
+  let anyGroupResult = false;
+  Object.keys(matchesByGroup).sort().forEach(g => {
+    const matches = matchesByGroup[g].slice().sort((a,b) => new Date(a.dt) - new Date(b.dt));
+    let groupTotal = 0;
+    let rowsHtml = '';
+    matches.forEach(m => {
+      const r = realScores[m.key];
+      if (!r || r.h === null || r.h === undefined) return;
+      anyGroupResult = true;
+      const p = allPalpites[m.key] || {};
+      const isDbl = allDoubles[g] === m.key;
+      const matchPts = calcMatchPoints(p, r);
+      const finalPts = matchPts * (isDbl ? 2 : 1);
+      groupTotal += finalPts;
+      const hasP = p.h !== null && p.h !== undefined;
+      rowsHtml += `<div class="pts-row">
+        <span class="pts-row-label">${FLAG_BY_TEAM[m.h]} ${m.h} ${hasP?`<b>${p.h}×${p.a}</b>`:'<i style="color:var(--muted)">(sem palpite)</i>'} ${m.a} ${FLAG_BY_TEAM[m.a]}</span>
+        <span class="pts-row-real">Real: ${r.h}×${r.a}</span>
+        <span class="pts-row-value ${finalPts>0?'positive':'zero'}">${finalPts>0?'+':''}${finalPts}${isDbl?' ⭐':''}</span>
+      </div>`;
+    });
+    if (rowsHtml) {
+      totalGroup += groupTotal;
+      html += `<div class="pts-group">
+        <div class="pts-group-header"><b>Grupo ${g}</b><span class="pts-group-total">${groupTotal} pts</span></div>
+        ${rowsHtml}
+      </div>`;
+    }
+  });
+  if (!anyGroupResult) html += `<p style="color:var(--muted);font-size:13px;padding:1rem 0;text-align:center">Nenhum resultado oficial ainda.</p>`;
+  
+  // Standings
+  let standingsRows = '';
+  let anyStanding = false;
+  Object.keys(GROUPS).forEach(g => {
+    const groupMatches = MATCHES.filter(m => m.g === g);
+    const allFinished = groupMatches.every(m => {
+      const r = realScores[m.key];
+      return r && r.h !== null && r.h !== undefined;
+    });
+    if (!allFinished) return;
+    anyStanding = true;
+    const realStand = calcStandings(realScores, g);
+    const palStand = calcStandings(allPalpites, g);
+    const r1 = realStand[0]?.name, r2 = realStand[1]?.name;
+    const p1 = palStand[0]?.name, p2 = palStand[1]?.name;
+    let p = 0, details = [];
+    if (p1 === r1) { p += 2; details.push(`1º correto (+2)`); }
+    if (p2 === r2) { p += 2; details.push(`2º correto (+2)`); }
+    if (p1 !== p2 && p1 === r2 && p2 === r1) { p += 1; details.push(`invertidos (+1)`); }
+    if (!details.length) details.push('nenhum acerto');
+    totalStand += p;
+    standingsRows += `<div class="pts-row">
+      <span class="pts-row-label"><b>Grupo ${g}</b> · ${details.join(', ')}</span>
+      <span class="pts-row-value ${p>0?'positive':'zero'}">${p>0?'+':''}${p}</span>
+    </div>`;
+  });
+  if (anyStanding) html += `<div class="pts-group">
+    <div class="pts-group-header"><b>Classificação dos grupos</b><span class="pts-group-total">${totalStand} pts</span></div>
+    ${standingsRows}
+  </div>`;
+  html += `</div>`;
+  
+  // Mata-mata
+  let anyKo = false, koHtml = '';
+  const KO_DBL_PHASES = ['r32','r16','qf'];
+  KO_PHASES.forEach(phase => {
+    const phaseMatches = koMatches.filter(km => km.phase === phase.id);
+    let phaseTotal = 0, rowsHtml = '';
+    phaseMatches.forEach(m => {
+      if (m.real_home === null || m.real_home === undefined) return;
+      anyKo = true;
+      const pal = allKoPalpites[m.id] || {};
+      const hasP = pal.h !== null && pal.h !== undefined;
+      const isDbl = KO_DBL_PHASES.includes(phase.id) && allKoDoubles[phase.id] === m.id;
+      let base = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+      if (isDbl) base *= 2;
+      const finalPts = base * phase.multiplier;
+      phaseTotal += finalPts;
+      const multStr = phase.multiplier > 1 || isDbl ? ` (${isDbl?'⭐ ':''}${phase.multiplier>1?'×'+phase.multiplier:''})` : '';
+      rowsHtml += `<div class="pts-row">
+        <span class="pts-row-label">${FLAG_BY_TEAM[m.home]||''} ${m.home||'?'} ${hasP?`<b>${pal.h}×${pal.a}</b>`:'<i>(sem palpite)</i>'} ${m.away||'?'} ${FLAG_BY_TEAM[m.away]||''}</span>
+        <span class="pts-row-real">Real: ${m.real_home}×${m.real_away}</span>
+        <span class="pts-row-value ${finalPts>0?'positive':'zero'}">${finalPts>0?'+':''}${finalPts}${multStr}</span>
+      </div>`;
+    });
+    if (rowsHtml) {
+      totalKo += phaseTotal;
+      koHtml += `<div class="pts-group">
+        <div class="pts-group-header"><b>${phase.label}</b><span class="pts-group-total">${phaseTotal} pts</span></div>
+        ${rowsHtml}
+      </div>`;
+    }
+  });
+  if (anyKo) html += `<div class="card"><div class="card-title">🏆 Mata-mata</div>${koHtml}</div>`;
+  
+  // Extras
+  let extrasRows = '', anyExtras = false;
+  EXTRAS.forEach(e => {
+    const rv = realExtras[e.key];
+    if (!rv) return;
+    anyExtras = true;
+    const pv = allExtras[e.key] || '';
+    const correct = pv && pv.toLowerCase().trim() === rv.toLowerCase().trim();
+    const p = correct ? e.pts : 0;
+    totalExt += p;
+    extrasRows += `<div class="pts-row">
+      <span class="pts-row-label"><b>${e.label}</b><br><small style="color:var(--muted)">Seu palpite: ${pv||'(vazio)'}</small></span>
+      <span class="pts-row-real">Real: ${rv}</span>
+      <span class="pts-row-value ${p>0?'positive':'zero'}">${p>0?'+':''}${p}</span>
+    </div>`;
+  });
+  if (anyExtras) html += `<div class="card"><div class="card-title">🏅 Prêmios finais</div>
+    <div class="pts-group">${extrasRows}<div class="pts-group-header" style="margin-top:.5rem;border-top:1px solid #eee;padding-top:.5rem"><b>Total</b><span class="pts-group-total">${totalExt} pts</span></div></div>
+  </div>`;
+  
+  // Ajustes
+  if (adj !== 0) {
+    const reason = pointsAdjustments[currentUser.uid]?.reason || '';
+    html += `<div class="card"><div class="card-title">⚖ Ajuste do admin</div>
+      <div class="pts-row">
+        <span class="pts-row-label">${reason || 'Ajuste manual'}</span>
+        <span class="pts-row-value ${adj>0?'positive':'zero'}" style="${adj<0?'color:var(--danger)':''}">${adj>0?'+':''}${adj}</span>
+      </div></div>`;
+  }
+  
+  const grandTotal = totalGroup + totalStand + totalKo + totalExt + adj;
+  html += `<div class="card" style="background:linear-gradient(135deg,var(--green),var(--green-dark));color:white;border:none">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;color:var(--gold-light)">TOTAL</div>
+        <div style="font-size:12px;opacity:.9">Grupos ${totalGroup} · Classif. ${totalStand} · Mata-mata ${totalKo} · Prêmios ${totalExt}${adj!==0?` · Ajuste ${adj>0?'+':''}${adj}`:''}</div>
+      </div>
+      <div style="font-family:'Bebas Neue';font-size:48px;color:var(--gold-light);line-height:1">${grandTotal}<span style="font-size:18px"> pts</span></div>
+    </div>
+  </div>`;
+  
+  return html;
+}
+
+// === REGRAS ===
+function renderRegras() {
+  return `<div class="banner">
+    <div class="banner-title">📖 Regras do bolão</div>
+    <div class="banner-text">Tudo o que você precisa saber para participar.</div>
+  </div>
+
+  <div class="card"><div class="card-title">🎯 O que você precisa preencher</div>
+  <ol style="padding-left:1.5rem;font-size:13.5px;line-height:1.7">
+    <li><b>Palpites de placar (72 jogos da fase de grupos)</b> — aba "Meus Palpites"</li>
+    <li><b>Jogo dobro de cada grupo</b> — marque ⭐ em 1 jogo de cada um dos 12 grupos</li>
+    <li><b>Palpites de placar do mata-mata (32 jogos)</b> — aba "Mata-mata", à medida que os times se definem. O placar oficial inclui a prorrogação, se houver</li>
+    <li><b>Jogo dobro do mata-mata</b> — marque ⭐ em 1 jogo nas <b>16 avos</b>, 1 jogo nas <b>oitavas</b>, e 1 jogo nas <b>quartas</b> (total: 3 dobros no mata-mata)</li>
+    <li><b>Prêmios finais</b> — campeão, vice, 3º, 4º, artilheiro, Bola de Ouro, Luva de Ouro</li>
+  </ol>
+  <div class="warn-box" style="margin-top:1rem"><b>⏰ Faça tudo antes do primeiro jogo (11/06/2026)!</b> Os palpites de prêmios finais ficam bloqueados antes do início da Copa. Os palpites de cada jogo travam 24h antes (grupos) ou 1h antes (mata-mata).</div>
+  </div>
+
+  <div class="card"><div class="card-title">⭐ Como funciona o jogo dobro</div>
+  <p style="font-size:13.5px;line-height:1.6;margin-bottom:.5rem">Em <b>cada grupo</b> e nas fases iniciais do mata-mata, você escolhe um único jogo para valer o <b>dobro</b> dos pontos. É a sua aposta estratégica!</p>
+  <ul style="padding-left:1.5rem;font-size:13.5px;line-height:1.7">
+    <li><b>Fase de grupos:</b> 1 jogo dobro por grupo (12 dobros no total)</li>
+    <li><b>Mata-mata:</b> 1 jogo dobro nas 16 avos + 1 nas oitavas + 1 nas quartas (3 dobros)</li>
+    <li><b>Semifinais, 3º lugar e final NÃO têm dobro do apostador</b> — é o mesmo peso para todos</li>
+    <li>Você pode trocar a escolha enquanto o jogo escolhido ainda estiver aberto</li>
+    <li>Quando o jogo escolhido como dobro travar, a escolha do dobro daquele grupo/fase fica fixa</li>
+    <li>Se não escolher, nenhum jogo dobra (você perde a vantagem)</li>
+  </ul>
+  </div>
+
+  <div class="card"><div class="card-title">📊 Sistema de pontuação</div>
+  <table class="pts-table">
+    <tr class="section-row"><td colspan="2">Por jogo (fase de grupos)</td></tr>
+    <tr><td>Acertou nº de gols do mandante</td><td>1 pt</td></tr>
+    <tr><td>Acertou nº de gols do visitante</td><td>1 pt</td></tr>
+    <tr><td>Diferença de gols exata</td><td>2 pts</td></tr>
+    <tr><td>Vencedor ou empate correto</td><td>2 pts</td></tr>
+    <tr><td><b>Máximo por jogo</b></td><td><b>6 pts</b></td></tr>
+    <tr class="section-row"><td colspan="2">Classificação dos grupos</td></tr>
+    <tr><td>1º colocado correto</td><td>2 pts</td></tr>
+    <tr><td>2º colocado correto</td><td>2 pts</td></tr>
+    <tr><td>1º e 2º invertidos</td><td>1 pt</td></tr>
+    <tr class="section-row"><td colspan="2">Mata-mata (mesmas regras do placar)</td></tr>
+    <tr><td>16 avos, oitavas e quartas (×1)</td><td>até 6 pts/jogo (12 com dobro)</td></tr>
+    <tr><td>Semifinais (×2 para todos)</td><td>até 12 pts/jogo</td></tr>
+    <tr><td>Disputa de 3º lugar (×1)</td><td>até 6 pts</td></tr>
+    <tr><td>Final (×3 para todos)</td><td>até 18 pts</td></tr>
+    <tr class="section-row"><td colspan="2">Final do torneio</td></tr>
+    <tr><td>4º lugar correto</td><td>10 pts</td></tr>
+    <tr><td>3º lugar correto</td><td>20 pts</td></tr>
+    <tr><td>Vice-campeão correto</td><td>30 pts</td></tr>
+    <tr><td>Campeão correto</td><td>40 pts</td></tr>
+    <tr class="section-row"><td colspan="2">Prêmios individuais</td></tr>
+    <tr><td>Artilheiro (Chuteira de Ouro)</td><td>15 pts</td></tr>
+    <tr><td>Bola de Ouro (Melhor Jogador)</td><td>15 pts</td></tr>
+    <tr><td>Luva de Ouro (Melhor Goleiro)</td><td>10 pts</td></tr>
+  </table>
+  <div class="info-box" style="margin-top:1rem">
+    <b>Observação sobre o mata-mata:</b> o placar oficial inclui a prorrogação (se houver). Por exemplo, se você palpita 2×1 e o jogo termina 1×1 no tempo normal mas 2×1 após a prorrogação, o resultado que vale é 2×1.
+  </div>
+  </div>
+
+  <div class="card"><div class="card-title">💰 Premiação</div>
+  <table class="pts-table">
+    <tr><td>🥇 1º lugar</td><td><b>60%</b> do valor arrecadado</td></tr>
+    <tr><td>🥈 2º lugar</td><td><b>25%</b> do valor arrecadado</td></tr>
+    <tr><td>🥉 3º lugar</td><td><b>10%</b> do valor arrecadado</td></tr>
+    <tr><td>⚙ Comissão (organização)</td><td><b>5%</b></td></tr>
+  </table>
+  </div>
+
+  <div class="card"><div class="card-title">🌎 Copa do Mundo 2026 — principais mudanças</div>
+  <ul style="padding-left:1.5rem;font-size:13.5px;line-height:1.7">
+    <li><b>48 seleções</b> participam (12 grupos de 4 times) — antes eram 32</li>
+    <li><b>3 países-sede:</b> EUA, Canadá e México (a primeira tríplice)</li>
+    <li><b>104 jogos no total</b> (antes 64) — Copa mais longa da história</li>
+    <li>Datas: <b>11 de junho a 19 de julho de 2026</b></li>
+    <li>16 cidades-sede em 16 estádios diferentes</li>
+    <li><b>Mata-mata expandido:</b> 16 avos de final (32 jogos), depois oitavas (16), quartas (8), semis (4), disputa do 3º lugar e final</li>
+    <li>Os 2 primeiros de cada grupo avançam (24 times) + 8 melhores 3ºs colocados completam os 32 do mata-mata</li>
+    <li>Final no <b>MetLife Stadium</b> (Nova York/Nova Jersey) em 19/07/2026</li>
+  </ul>
+  </div>
+
+  <div class="card" style="background:var(--green-light);border-color:var(--green)"><div class="card-title">💡 Dicas para participar</div>
+  <ul style="padding-left:1.5rem;font-size:13.5px;line-height:1.7">
+    <li><b>Preencha TUDO antes do início da Copa</b> para não esquecer durante o torneio</li>
+    <li>Marque o jogo dobro de cada grupo logo — pode ajustar até travar</li>
+    <li>Acompanhe a aba "Meus Pontos" para ver onde está ganhando ou perdendo</li>
+    <li>Acerto de placar exato dá <b>6 pts</b> num jogo normal, <b>12 pts</b> se for seu dobro</li>
+    <li>Na final (×3), placar exato vale 18 pts para todos</li>
+    <li>Os prêmios finais (campeão = 40 pts) são onde a maior pontuação está concentrada — não os deixe vazios!</li>
+  </ul>
+  </div>`;
+}
+// === ADMIN ===
+async function renderAdminAsync(c) {
+  c.innerHTML = `<div class="loading"><div class="spinner"></div>Carregando admin...</div>`;
+  // Usa o cache compartilhado (mesmo do ranking) em vez de reler 'users' a cada sub-aba
+  const _adminData = await getAllUsersData();
+  allUsers = _adminData.users.slice().sort((a,b) => (a.nickname||'').localeCompare(b.nickname||''));
+  await loadAllData();
+  
+  let html = `<div class="banner">
+    <div class="banner-title">⚙ Painel do administrador</div>
+    <div class="banner-text">Gerencie tudo: participantes, resultados, mata-mata e ajustes.</div>
+  </div>`;
+  
+  const adminTab = window._adminTab || 'users';
+  html += `<div class="admin-subtabs">
+    ${[
+      {id:'users', label:'👥 Participantes'},
+      {id:'results', label:'⚽ Resultados Grupos'},
+      {id:'ko', label:'🏆 Mata-mata'},
+      {id:'extras-admin', label:'🏅 Prêmios'},
+      {id:'view', label:'👁 Ver palpites'},
+      {id:'adjust', label:'⚖ Ajustar pontos'},
+      {id:'lists', label:'📝 Editar listas'},
+      {id:'export', label:'📥 Exportar'}
+    ].map(t => `<div class="admin-subtab${adminTab===t.id?' active':''}" onclick="setAdminTab('${t.id}')">${t.label}</div>`).join('')}
+  </div>`;
+  
+  if (adminTab === 'users') html += renderAdminUsers();
+  else if (adminTab === 'results') html += renderAdminResults();
+  else if (adminTab === 'ko') html += renderAdminKo();
+  else if (adminTab === 'extras-admin') html += renderAdminExtras();
+  else if (adminTab === 'view') html += renderAdminViewUser();
+  else if (adminTab === 'adjust') html += renderAdminAdjust();
+  else if (adminTab === 'lists') html += renderAdminLists();
+  else if (adminTab === 'export') html += renderAdminExport();
+  
+  c.innerHTML = html;
+}
+
+window.setAdminTab = function(id) {
+  window._adminTab = id;
+  renderAdminAsync(document.getElementById('main-content'));
+}
+
+function renderAdminUsers() {
+  const nonAdmin = allUsers.filter(u => !u.is_admin);
+  let html = `<div class="card"><div class="card-title">Participantes (${nonAdmin.length})</div>`;
+  if (!nonAdmin.length) {
+    html += `<p style="color:var(--muted);font-size:13px;padding:1rem 0;text-align:center">Nenhum participante ainda. Compartilhe o link da página.</p>`;
+  } else {
+    nonAdmin.forEach(u => {
+      html += `<div class="user-row">
+        <div class="rank-avatar" style="width:32px;height:32px;font-size:12px">${(u.nickname||'?').substring(0,2).toUpperCase()}</div>
+        <div style="flex:1">
+          <div style="font-weight:600">${u.nickname}</div>
+          <div style="font-size:11px;color:var(--muted)">${u.email}</div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="removeUser('${u.uid}','${u.nickname}')">Remover</button>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderLockButtons(matchKey, isFilled, isLocked, isManLock, isManUnlock, fnName) {
+  // Sempre mostra os 3 botões. Funciona mesmo quando há resultado oficial.
+  const unlockActive = isManUnlock || (!isLocked && !isManLock);
+  const lockActive = isManLock || (isLocked && !isManUnlock && !isManLock);
+  const autoActive = !isManLock && !isManUnlock;
+  let html = `<div class="lock-btns">
+    <button class="lock-btn unlock${unlockActive?' active':''}" onclick="${fnName}('${matchKey}',false)" title="Forçar aberto">🔓 Aberto</button>
+    <button class="lock-btn lock${lockActive?' active':''}" onclick="${fnName}('${matchKey}',true)" title="Forçar travado">🔒 Travado</button>
+    <button class="lock-btn auto${autoActive?' active':''}" onclick="${fnName}('${matchKey}',null)" title="Automático">⚙ Auto</button>
+  </div>`;
+  if (isFilled) html = `<div style="display:flex;align-items:center;gap:6px"><span class="lock-toggle locked" style="font-size:10px">🔒 Oficial</span>${html}</div>`;
+  return html;
+}
+
+function renderAdminResults() {
+  let html = `<div class="card"><div class="card-title">Resultados — Fase de Grupos</div>
+  <div class="info-box">Travamento automático: 24h antes do jogo. Use os botões 🔓/🔒/⚙ para forçar aberto, travado, ou voltar ao automático. Mesmo com resultado oficial inserido, você pode destravar para permitir edição.</div>`;
+  
+  const matchesByGroup = {};
+  MATCHES.forEach(m => { if (!matchesByGroup[m.g]) matchesByGroup[m.g] = []; matchesByGroup[m.g].push(m); });
+  Object.keys(matchesByGroup).sort().forEach(g => {
+    const matches = matchesByGroup[g].slice().sort((a,b) => new Date(a.dt) - new Date(b.dt));
+    html += `<div style="margin-bottom:1.25rem"><div class="section-label">Grupo ${g}</div>`;
+    matches.forEach(m => {
+      const r = realScores[m.key] || {};
+      const filled = r.h !== null && r.h !== undefined;
+      const locked = isMatchLocked(m);
+      const isManLock = manualLocks[m.key] === true;
+      const isManUnlock = manualLocks[m.key] === false;
+      html += `<div class="match-card${filled?' has-result':''}" style="padding:10px 14px">
+        <div class="match-header" style="margin-bottom:8px">
+          <span class="match-date">${formatMatchDate(m.dt)} · ${m.local}</span>
+          ${renderLockButtons(m.key, filled, locked, isManLock, isManUnlock, 'setLock')}
+        </div>
+        <div class="match-row">
+          <span class="team" style="font-size:12px"><span class="flag">${FLAG_BY_TEAM[m.h]}</span>${m.h}</span>
+          <div class="score-box">
+            <input class="score${filled?' real-score':''}" type="number" min="0" max="30" value="${r.h??''}" placeholder="–"
+              data-rkey="${m.key}" data-rside="h" onchange="saveReal(this)">
+            <span class="sep">×</span>
+            <input class="score${filled?' real-score':''}" type="number" min="0" max="30" value="${r.a??''}" placeholder="–"
+              data-rkey="${m.key}" data-rside="a" onchange="saveReal(this)">
+          </div>
+          <span class="team right" style="font-size:12px">${m.a}<span class="flag">${FLAG_BY_TEAM[m.a]}</span></span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderAdminExtras() {
+  let html = `<div class="card"><div class="card-title">Resultados Finais</div>
+  <div style="display:flex;align-items:center;gap:10px;padding:10px 0;margin-bottom:1rem;border-bottom:1px solid #f0f0f0">
+    <div style="flex:1">
+      <div style="font-weight:600;font-size:13px">Palpites de prêmios finais</div>
+      <div style="font-size:11px;color:var(--muted)">Campeão, vice, 3º, 4º, Bola/Chuteira/Luva de Ouro</div>
+    </div>
+    <button class="btn btn-sm ${extrasLocked?'btn-warn':'btn-outline'}" onclick="toggleExtrasLock()">
+      ${extrasLocked?'🔒 Bloqueados · destravar':'🔓 Abertos · travar'}
+    </button>
+  </div>
+  <div class="extras-grid">`;
+  EXTRAS.forEach(e => {
+    const val = realExtras[e.key] || '';
+    html += `<div class="extra-item"><label>${e.label}</label>`;
+    if (e.type === 'team') {
+      html += `<select data-rex="${e.key}" onchange="saveRealExtra(this)">
+        <option value="">— não definido</option>${ALL_TEAMS_SORTED.map(t=>`<option value="${t}"${val===t?' selected':''}>${FLAG_BY_TEAM[t]} ${t}</option>`).join('')}
+      </select>`;
+    } else {
+      const list = getPlayerList(e.list);
+      html += `<select data-rex="${e.key}" onchange="saveRealExtra(this)">
+        <option value="">— não definido</option>${list.map(p=>`<option${val===p?' selected':''}>${p}</option>`).join('')}
+      </select>`;
+    }
+    html += `</div>`;
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+function renderAdminKo() {
+  let html = `<div class="card"><div class="card-title">Mata-mata — Confrontos e resultados</div>
+  <div class="info-box">Estrutura já criada com data e local. Selecione os times conforme a Copa avança. Insira placar quando o jogo terminar. Botões de travamento funcionam mesmo com resultado oficial.</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
+    <button class="btn btn-sm btn-outline" onclick="resyncKoDates()">🔄 Atualizar datas/locais oficiais</button>
+    <button class="btn btn-sm btn-danger" onclick="resetKoMatches()">♻ Recriar todos os jogos do zero</button>
+  </div>`;
+  
+  KO_PHASES.forEach(phase => {
+    const phaseMatches = koMatches.filter(m => m.phase === phase.id).sort((a,b) => (a.order||0)-(b.order||0));
+    const mult = phase.multiplier > 1 ? ` <span class="phase-mult">×${phase.multiplier}</span>` : '';
+    html += `<div style="margin-bottom:1.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+        <div class="section-label" style="margin:0">${phase.label}${mult} (${phaseMatches.length} jogos)</div>
+        <button class="btn btn-sm btn-outline" onclick="addKoMatch('${phase.id}')">+ Adicionar jogo extra</button>
+      </div>`;
+    phaseMatches.forEach(m => {
+      const filled = m.real_home !== null && m.real_home !== undefined;
+      const locked = isKoLocked(m);
+      const isManLock = koLocks[m.id] === true;
+      const isManUnlock = koLocks[m.id] === false;
+      
+      // Convert UTC stored date to local datetime-local input value
+      let dtLocal = '';
+      if (m.dt) {
+        const d = new Date(m.dt);
+        const pad = n => String(n).padStart(2,'0');
+        dtLocal = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+      html += `<div class="match-card${filled?' has-result':''}" style="margin-bottom:8px;padding:12px">
+        <div class="match-header" style="margin-bottom:8px;gap:8px;flex-wrap:wrap">
+          <input type="datetime-local" value="${dtLocal}" onchange="saveKoMeta('${m.id}','dt',this.value)" style="font-size:11px;padding:4px 7px;border:1px solid var(--border);border-radius:4px">
+          <input type="text" value="${m.local||''}" placeholder="Local" onchange="saveKoMeta('${m.id}','local',this.value)" style="font-size:11px;padding:4px 7px;border:1px solid var(--border);border-radius:4px;flex:1;min-width:100px">
+          ${renderLockButtons(m.id, filled, locked, isManLock, isManUnlock, 'setKoLock')}
+          <button class="btn btn-sm btn-danger" onclick="deleteKoMatch('${m.id}')">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center">
+          <select onchange="saveKoMeta('${m.id}','home',this.value)" style="padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;width:100%">
+            <option value="">— mandante —</option>
+            ${ALL_TEAMS_SORTED.map(t => `<option value="${t}"${m.home===t?' selected':''}>${FLAG_BY_TEAM[t]} ${t}</option>`).join('')}
+          </select>
+          <div class="score-box">
+            <input class="score${filled?' real-score':''}" type="number" min="0" max="30" value="${m.real_home??''}" placeholder="–"
+              data-korkey="${m.id}" data-korside="h" onchange="saveKoReal(this)">
+            <span class="sep">×</span>
+            <input class="score${filled?' real-score':''}" type="number" min="0" max="30" value="${m.real_away??''}" placeholder="–"
+              data-korkey="${m.id}" data-korside="a" onchange="saveKoReal(this)">
+          </div>
+          <select onchange="saveKoMeta('${m.id}','away',this.value)" style="padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;width:100%">
+            <option value="">— visitante —</option>
+            ${ALL_TEAMS_SORTED.map(t => `<option value="${t}"${m.away===t?' selected':''}>${FLAG_BY_TEAM[t]} ${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderAdminViewUser() {
+  let html = `<div class="card"><div class="card-title">Ver palpites de um participante</div>
+  <div class="form-group" style="margin-bottom:1rem">
+    <label>Selecione o participante</label>
+    <select onchange="window._viewUid=this.value;showUserDetailFromAdmin()" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif">
+      <option value="">— escolha um participante —</option>
+      ${allUsers.filter(u=>!u.is_admin).map(u => `<option value="${u.uid}_${u.nickname.replace(/[^a-zA-Z0-9]/g,'')}"${window._viewUid&&window._viewUid.startsWith(u.uid)?' selected':''}>${u.nickname} (${u.email})</option>`).join('')}
+    </select>
+  </div></div>`;
+  return html;
+}
+
+window.backFromDetail = function() {
+  if (window._detailOrigin === 'admin') {
+    window._adminTab = 'view';
+    showTab('admin');
+  } else {
+    showTab('ranking');
+  }
+}
+
+window.showUserDetailFromAdmin = function() {
+  const v = window._viewUid;
+  if (!v) return;
+  const uid = v.split('_')[0];
+  const user = allUsers.find(u => u.uid === uid);
+  if (user) showUserDetail(uid, user.nickname, 'admin');
+}
+
+function renderAdminAdjust() {
+  let html = `<div class="card"><div class="card-title">Ajustar pontos manualmente</div>
+  <div class="info-box">Use para corrigir bugs ou aplicar bonificações/penalidades. Aparece destacado no ranking.</div>`;
+  const nonAdmin = allUsers.filter(u => !u.is_admin);
+  if (!nonAdmin.length) {
+    html += `<p style="color:var(--muted);text-align:center;padding:1rem">Sem participantes ainda.</p>`;
+  } else {
+    nonAdmin.forEach(u => {
+      const adj = pointsAdjustments[u.uid] || {amount: 0, reason: ''};
+      html += `<div class="user-row" style="flex-wrap:wrap">
+        <div class="rank-avatar" style="width:32px;height:32px;font-size:12px">${(u.nickname||'?').substring(0,2).toUpperCase()}</div>
+        <div style="flex:1;min-width:120px"><div style="font-weight:600">${u.nickname}</div></div>
+        <input type="number" id="adj-amt-${u.uid}" value="${adj.amount||0}" placeholder="0" style="width:70px;padding:6px;border:1.5px solid var(--border);border-radius:6px;text-align:center;font-weight:700;font-family:'DM Sans',sans-serif">
+        <input type="text" id="adj-rea-${u.uid}" value="${adj.reason||''}" placeholder="Motivo (opcional)" style="flex:1;min-width:140px;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:'DM Sans',sans-serif">
+        <button class="btn btn-sm btn-green" onclick="saveAdjust('${u.uid}')">Salvar</button>
+      </div>`;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+window.saveAdjust = async function(uid) {
+  const amount = parseInt(document.getElementById(`adj-amt-${uid}`).value) || 0;
+  const reason = document.getElementById(`adj-rea-${uid}`).value || '';
+  if (amount === 0 && !reason) {
+    await fbDelete('points_adjustments', uid);
+    delete pointsAdjustments[uid];
+  } else {
+    await fbSetDoc('points_adjustments', uid, {uid, amount, reason});
+    pointsAdjustments[uid] = {amount, reason};
+  }
+  scheduleRecompute();
+  flashSave();
+}
+
+function renderAdminLists() {
+  const lists = [
+    {key:'artilheiro', label:'⚽ Artilheiro (Chuteira de Ouro)'},
+    {key:'bola_ouro', label:'⭐ Bola de Ouro (Melhor Jogador)'},
+    {key:'luva', label:'🧤 Luva de Ouro (Goleiro)'}
+  ];
+  let html = `<div class="card"><div class="card-title">📝 Editar listas de jogadores</div>
+  <div class="info-box">Edite as listas de candidatos aos prêmios. Útil quando saem as convocações oficiais (até 2/junho) ou quando há lesões. Adicione no formato <b>Nome (País)</b>. As mudanças aparecem para todos os participantes na aba "Prêmios Finais".</div>
+  <div class="warn-box" style="margin-bottom:1rem;font-size:12px"><b>Atenção:</b> se você remover um jogador que alguém já escolheu como palpite, o palpite dessa pessoa ficará "órfão" (não pontuará). Edite preferencialmente antes do início da Copa.</div>`;
+  
+  lists.forEach(l => {
+    const players = getPlayerList(l.key);
+    html += `<div style="margin-bottom:1.5rem">
+      <div class="section-label">${l.label} (${players.length} jogadores)</div>
+      <div id="list-${l.key}" style="margin-bottom:.5rem">`;
+    players.forEach((p, i) => {
+      html += `<div class="user-row" style="padding:6px 10px">
+        <span style="flex:1;font-size:13px">${i+1}. ${p}</span>
+        <button class="btn btn-sm btn-danger" onclick="removePlayer('${l.key}',${i})">×</button>
+      </div>`;
+    });
+    html += `</div>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="add-${l.key}" placeholder="Nome (País)" style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif">
+        <button class="btn btn-sm btn-green" onclick="addPlayer('${l.key}')">+ Adicionar</button>
+      </div>
+    </div>`;
+  });
+  
+  html += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid #eee">
+    <button class="btn btn-sm btn-outline" onclick="resetPlayerLists()">↺ Restaurar listas padrão</button>
+  </div>
+  </div>`;
+  return html;
+}
+
+async function ensurePlayerListsLoaded() {
+  // Inicializa playerLists com as padrão se ainda não houver customização
+  if (!playerLists) {
+    playerLists = {
+      artilheiro: [...PLAYER_FAVORITES.artilheiro],
+      bola_ouro: [...PLAYER_FAVORITES.bola_ouro],
+      luva: [...PLAYER_FAVORITES.luva]
+    };
+  }
+}
+
+window.addPlayer = async function(listKey) {
+  const input = document.getElementById('add-' + listKey);
+  const name = input.value.trim();
+  if (!name) return;
+  await ensurePlayerListsLoaded();
+  if (playerLists[listKey].includes(name)) { alert('Esse jogador já está na lista.'); return; }
+  playerLists[listKey].push(name);
+  await fbSetDoc('settings', 'player_lists', {lists: playerLists});
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.removePlayer = async function(listKey, index) {
+  await ensurePlayerListsLoaded();
+  playerLists[listKey].splice(index, 1);
+  await fbSetDoc('settings', 'player_lists', {lists: playerLists});
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.resetPlayerLists = async function() {
+  if (!confirm('Restaurar as listas padrão de jogadores? Suas edições serão perdidas.')) return;
+  playerLists = null;
+  await fbDelete('settings', 'player_lists');
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+function renderAdminExport() {
+  return `<div class="card"><div class="card-title">📥 Exportar dados</div>
+  <div class="info-box">Baixe todos os dados em CSV (abre no Excel) ou PDF.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+    <div style="padding:1rem;border:1.5px solid var(--border);border-radius:10px">
+      <div style="font-family:'Bebas Neue';font-size:18px;color:var(--green);letter-spacing:1px;margin-bottom:.5rem">📊 Ranking</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Pontuação de todos</div>
+      <button class="btn btn-green btn-sm" onclick="exportRankingCSV()" style="width:100%;margin-bottom:.5rem">Excel/CSV</button>
+      <button class="btn btn-outline btn-sm" onclick="exportRankingPDF()" style="width:100%">PDF</button>
+    </div>
+    <div style="padding:1rem;border:1.5px solid var(--border);border-radius:10px">
+      <div style="font-family:'Bebas Neue';font-size:18px;color:var(--green);letter-spacing:1px;margin-bottom:.5rem">⚽ Palpites</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">De todos os jogos</div>
+      <button class="btn btn-green btn-sm" onclick="exportPalpitesCSV()" style="width:100%;margin-bottom:.5rem">Excel/CSV</button>
+      <button class="btn btn-outline btn-sm" onclick="exportPalpitesPDF()" style="width:100%">PDF</button>
+    </div>
+    <div style="padding:1rem;border:1.5px solid var(--border);border-radius:10px">
+      <div style="font-family:'Bebas Neue';font-size:18px;color:var(--green);letter-spacing:1px;margin-bottom:.5rem">🎯 Resultados</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Placares oficiais</div>
+      <button class="btn btn-green btn-sm" onclick="exportResultadosCSV()" style="width:100%;margin-bottom:.5rem">Excel/CSV</button>
+      <button class="btn btn-outline btn-sm" onclick="exportResultadosPDF()" style="width:100%">PDF</button>
+    </div>
+    <div style="padding:1rem;border:1.5px solid var(--border);border-radius:10px">
+      <div style="font-family:'Bebas Neue';font-size:18px;color:var(--green);letter-spacing:1px;margin-bottom:.5rem">📋 Tudo</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Relatório completo</div>
+      <button class="btn btn-green btn-sm" onclick="exportTudoCSV()" style="width:100%;margin-bottom:.5rem">Excel/CSV</button>
+      <button class="btn btn-outline btn-sm" onclick="exportTudoPDF()" style="width:100%">PDF</button>
+    </div>
+  </div>
+  <div class="warn-box" style="margin-top:1.5rem;font-size:12px"><b>Dica:</b> No PDF, escolha "Salvar como PDF" na janela de impressão.</div>
+  </div>`;
+}
+
+// === SAVES ===
+window.savePalpite = async function(el) {
+  const key = el.dataset.key;
+  const side = el.dataset.side;
+  const val = el.value === '' ? null : parseInt(el.value);
+  const match = MATCHES.find(m => m.key === key);
+  if (isMatchLocked(match)) { el.disabled = true; alert('Este jogo está bloqueado.'); return; }
+  if (!allPalpites[key]) allPalpites[key] = {};
+  allPalpites[key][side] = val;
+  await fbSetDoc('palpites', `${currentUser.uid}_${key}`, {
+    uid: currentUser.uid, match_key: key,
+    goals_home: allPalpites[key].h ?? null, goals_away: allPalpites[key].a ?? null
+  });
+  flashSave();
+}
+
+window.saveReal = async function(el) {
+  const key = el.dataset.rkey;
+  const side = el.dataset.rside;
+  const val = el.value === '' ? null : parseInt(el.value);
+  if (!realScores[key]) realScores[key] = {};
+  realScores[key][side] = val;
+  await fbSetDoc('resultados', key, {goals_home: realScores[key].h ?? null, goals_away: realScores[key].a ?? null});
+  el.classList.toggle('real-score', val !== null);
+  scheduleRecompute();
+  flashSave();
+}
+
+window.saveRealExtra = async function(el) {
+  const key = el.dataset.rex;
+  let v = el.value;
+  if (v && /^[\u{1F1E6}-\u{1F1FF}\u{1F3F4}]/u.test(v)) {
+    v = v.replace(/^[\u{1F1E6}-\u{1F1FF}\u{1F3F4}\u{E0061}-\u{E007F}]+\s*/u, '');
+  }
+  realExtras[key] = v;
+  await fbSetDoc('resultados_extras', key, {value: v});
+  scheduleRecompute();
+  flashSave();
+}
+
+window.setLock = async function(matchKey, newVal) {
+  if (newVal === null) {
+    delete manualLocks[matchKey];
+    await fbDelete('locks', matchKey);
+  } else {
+    manualLocks[matchKey] = newVal;
+    await fbSetDoc('locks', matchKey, {locked: newVal});
+  }
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.setKoLock = async function(koId, newVal) {
+  if (newVal === null) {
+    delete koLocks[koId];
+    await fbDelete('ko_locks', koId);
+  } else {
+    koLocks[koId] = newVal;
+    await fbSetDoc('ko_locks', koId, {locked: newVal});
+  }
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.toggleExtrasLock = async function() {
+  extrasLocked = !extrasLocked;
+  await fbSetDoc('settings', 'global', {extras_locked: extrasLocked});
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.removeUser = async function(uid, nick) {
+  if (!confirm(`Remover ${nick}? Os palpites também serão apagados.`)) return;
+  // Reutiliza o cache já carregado (evita reler todas as coleções)
+  const {allP, allE, allD, allKoP, allKoD} = await getAllUsersData();
+  await Promise.all([
+    ...allP.filter(p => p.uid === uid).map(p => fbDelete('palpites', p.id)),
+    ...allE.filter(e => e.uid === uid).map(e => fbDelete('palpites_extras', e.id)),
+    ...allD.filter(d => d.uid === uid).map(d => fbDelete('doubles', d.id)),
+    ...allKoP.filter(k => k.uid === uid).map(k => fbDelete('ko_palpites', k.id)),
+    ...allKoD.filter(d => d.uid === uid).map(d => fbDelete('ko_doubles', d.id)),
+    fbDelete('points_adjustments', uid),
+    fbDelete('users', uid)
+  ]);
+  invalidateAllUsersCache(); // força recarregar lista atualizada na próxima leitura
+  await recomputeStandings(true); // recalcula ranking sem o usuário removido
+  renderAdminAsync(document.getElementById('main-content'));
+}
+
+window.resyncKoDates = async function() {
+  if (!confirm('Atualizar as datas e locais oficiais de todos os jogos do mata-mata? Os times, placares e palpites já preenchidos serão MANTIDOS.')) return;
+  for (const def of KO_DEFAULT_MATCHES) {
+    const id = `ko_${def.phase}_${def.order}`;
+    await fbSetDoc('ko_matches', id, {dt: def.dt, local: def.local});
+  }
+  await loadAllData(true);
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+  alert('Datas e locais atualizados! Times e palpites foram mantidos.');
+}
+
+window.resetKoMatches = async function() {
+  if (!confirm('ATENÇÃO: isso vai APAGAR todos os jogos do mata-mata e recriar do zero com datas oficiais. Todos os palpites e dobros do mata-mata dos participantes serão PERDIDOS. Continuar?')) return;
+  if (!confirm('Tem certeza absoluta? Esta ação não pode ser desfeita.')) return;
+  // Apagar tudo do mata-mata
+  const [ko, koP, koD, koL] = await Promise.all([
+    fbGetAll('ko_matches'), fbGetAll('ko_palpites'), fbGetAll('ko_doubles'), fbGetAll('ko_locks')
+  ]);
+  await Promise.all([
+    ...ko.map(m => fbDelete('ko_matches', m.id)),
+    ...koP.map(p => fbDelete('ko_palpites', p.id)),
+    ...koD.map(d => fbDelete('ko_doubles', d.id)),
+    ...koL.map(l => fbDelete('ko_locks', l.id))
+  ]);
+  // Recriar
+  for (const def of KO_DEFAULT_MATCHES) {
+    const id = `ko_${def.phase}_${def.order}`;
+    await fbSetDoc('ko_matches', id, {
+      id, phase: def.phase, order: def.order, dt: def.dt, local: def.local,
+      home: null, away: null, real_home: null, real_away: null
+    });
+  }
+  await loadAllData(true);
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+  alert('Mata-mata recriado do zero com as datas oficiais!');
+}
+
+window.addKoMatch = async function(phase) {
+  const id = 'ko_extra_' + Date.now() + '_' + Math.random().toString(36).substring(2,6);
+  const phaseMatches = koMatches.filter(m => m.phase === phase);
+  const order = Math.max(0, ...phaseMatches.map(m => m.order||0)) + 1;
+  const newMatch = {id, phase, home:null, away:null, dt:null, local:'', real_home:null, real_away:null, order};
+  await fbSetDoc('ko_matches', id, newMatch);
+  koMatches.push(newMatch);
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.deleteKoMatch = async function(id) {
+  if (!confirm('Excluir esse confronto? Os palpites dos participantes serão apagados.')) return;
+  const [allKoP, allKoD] = await Promise.all([fbGetAll('ko_palpites'), fbGetAll('ko_doubles')]);
+  await Promise.all([
+    ...allKoP.filter(k => k.ko_key === id).map(k => fbDelete('ko_palpites', k.id)),
+    ...allKoD.filter(d => d.ko_key === id).map(d => fbDelete('ko_doubles', d.id)),
+    fbDelete('ko_matches', id),
+    fbDelete('ko_locks', id)
+  ]);
+  koMatches = koMatches.filter(m => m.id !== id);
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+window.saveKoMeta = async function(id, field, value) {
+  const m = koMatches.find(km => km.id === id);
+  if (!m) return;
+  if (field === 'dt' && value) {
+    // datetime-local input gives local time without timezone info
+    // Convert from user's local timezone to UTC ISO string
+    const localDate = new Date(value);
+    value = localDate.toISOString();
+  }
+  m[field] = value || null;
+  await fbSetDoc('ko_matches', id, {[field]: m[field]});
+  flashSave();
+}
+
+window.saveKoReal = async function(el) {
+  const id = el.dataset.korkey;
+  const side = el.dataset.korside;
+  const val = el.value === '' ? null : parseInt(el.value);
+  const m = koMatches.find(km => km.id === id);
+  if (!m) return;
+  if (side === 'h') m.real_home = val;
+  else m.real_away = val;
+  await fbSetDoc('ko_matches', id, {real_home: m.real_home, real_away: m.real_away});
+  el.classList.toggle('real-score', val !== null);
+  scheduleRecompute();
+  renderAdminAsync(document.getElementById('main-content'));
+  flashSave();
+}
+
+// === EXPORTS ===
+function downloadCSV(filename, rows) {
+  const csv = rows.map(r => r.map(c => {
+    if (c === null || c === undefined) return '';
+    const s = String(c).replace(/"/g, '""');
+    return /[,;"\n]/.test(s) ? `"${s}"` : s;
+  }).join(';')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function openPrintWindow(title, htmlBody) {
+  const w = window.open('', '_blank');
+  if (!w) { alert('Permita pop-ups para gerar o PDF.'); return; }
+  const scriptTag = '<' + 'script>setTimeout(function(){window.print();},400);<' + '/script>';
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 24px; color: #1a1a1a; }
+    h1 { color: #006847; font-size: 22px; margin-bottom: 6px; }
+    h2 { color: #006847; font-size: 16px; margin: 18px 0 8px; border-bottom: 2px solid #C9A84C; padding-bottom: 4px; }
+    h3 { color: #004d35; font-size: 13px; margin: 12px 0 6px; }
+    .subtitle { color: #6b7280; font-size: 12px; margin-bottom: 18px; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 14px; }
+    th { background: #006847; color: white; padding: 6px 8px; text-align: left; font-weight: 600; }
+    td { padding: 5px 8px; border-bottom: 1px solid #eee; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    .gold { background: #C9A84C !important; color: white; font-weight: 700; }
+    .small { font-size: 10px; color: #6b7280; }
+    @page { margin: 1.5cm; }
+  </style></head><body>${htmlBody}${scriptTag}</body></html>`);
+  w.document.close();
+}
+
+async function gatherAllData() {
+  const {users, allP, allE, allD, allKoP, allKoD} = await getAllUsersData();
+  return users.filter(u => !u.is_admin).map(u => {
+    const uPal = {}, uEx = {}, uDbl = {}, uKo = {}, uKoDbl = {};
+    allP.filter(p => p.uid === u.uid).forEach(p => uPal[p.match_key] = {h: p.goals_home, a: p.goals_away});
+    allE.filter(e => e.uid === u.uid).forEach(e => uEx[e.extra_key] = e.value);
+    allD.filter(d => d.uid === u.uid).forEach(d => uDbl[d.group] = d.match_key);
+    allKoP.filter(k => k.uid === u.uid).forEach(k => uKo[k.ko_key] = {h:k.goals_home,a:k.goals_away});
+    allKoD.filter(d => d.uid === u.uid).forEach(d => uKoDbl[d.phase] = d.ko_key);
+    const basePts = calcUserPoints(uPal, uEx, uDbl, uKo, uKoDbl);
+    const adj = pointsAdjustments[u.uid]?.amount || 0;
+    return {user: u, palpites: uPal, extras: uEx, doubles: uDbl, ko: uKo, koDoubles: uKoDbl, basePts, adj, totalPts: basePts + adj};
+  }).sort((a,b) => b.totalPts - a.totalPts);
+}
+
+window.exportRankingCSV = async function() {
+  const data = await gatherAllData();
+  const rows = [['Posição','Apelido','Email','Pontos Base','Ajuste','Motivo','Total']];
+  data.forEach((u, i) => rows.push([i+1, u.user.nickname, u.user.email, u.basePts, u.adj, pointsAdjustments[u.user.uid]?.reason||'', u.totalPts]));
+  downloadCSV('ranking_bolao_2026.csv', rows);
+}
+
+window.exportRankingPDF = async function() {
+  const data = await gatherAllData();
+  let body = `<h1>🏆 Ranking — Bolão Copa 2026</h1><div class="subtitle">${data.length} participantes · ${new Date().toLocaleDateString('pt-BR')}</div>
+  <table><thead><tr><th>#</th><th>Apelido</th><th>Email</th><th style="text-align:right">Base</th><th style="text-align:right">Ajuste</th><th style="text-align:right">Total</th></tr></thead><tbody>`;
+  data.forEach((u, i) => {
+    body += `<tr class="${i===0?'gold':''}"><td><b>${i+1}</b></td><td>${u.user.nickname}</td><td class="small">${u.user.email}</td><td style="text-align:right">${u.basePts}</td><td style="text-align:right">${u.adj!==0?(u.adj>0?'+':'')+u.adj:'—'}</td><td style="text-align:right"><b>${u.totalPts}</b></td></tr>`;
+  });
+  body += `</tbody></table>`;
+  openPrintWindow('Ranking', body);
+}
+
+// Pontos de um prêmio individual (campeão, artilheiro, etc.) para um palpite
+function extraPoints(extraDef, userValue) {
+  const pv = (userValue||'').toLowerCase().trim();
+  const rv = (realExtras[extraDef.key]||'').toLowerCase().trim();
+  return (pv && rv && pv === rv) ? extraDef.pts : 0;
+}
+
+window.exportPalpitesCSV = async function() {
+  const data = await gatherAllData();
+  const rows = [['Participante','Fase/Tipo','Grupo','Data','Mandante/Prêmio','Casa','Fora','Visitante','Real Casa','Real Fora','Dobro','Pts']];
+  data.forEach(u => {
+    // Fase de grupos
+    MATCHES.forEach(m => {
+      const p = u.palpites[m.key] || {}; const r = realScores[m.key] || {};
+      const isDbl = u.doubles[m.g] === m.key;
+      let pts = '';
+      if (p.h !== undefined && p.h !== null && r.h !== undefined && r.h !== null) {
+        let bp = calcMatchPoints(p, r); if (isDbl) bp *= 2; pts = bp;
+      }
+      rows.push([u.user.nickname,'Grupos',m.g,m.dt,m.h,p.h??'',p.a??'',m.a,r.h??'',r.a??'',isDbl?'⭐':'',pts]);
+    });
+    // Mata-mata
+    koMatches.forEach(m => {
+      const phase = KO_PHASES.find(p => p.id === m.phase);
+      const pal = u.ko[m.id] || {};
+      const isDbl = u.koDoubles[m.phase] === m.id;
+      let pts = '';
+      if (pal.h !== undefined && pal.h !== null && m.real_home !== undefined && m.real_home !== null) {
+        let bp = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+        if (isDbl) bp *= 2; bp *= phase.multiplier; pts = bp;
+      }
+      rows.push([u.user.nickname, phase?.label || m.phase,'',m.dt||'',m.home||'',pal.h??'',pal.a??'',m.away||'',m.real_home??'',m.real_away??'',isDbl?'⭐':'',pts]);
+    });
+    // Prêmios finais
+    EXTRAS.forEach(e => {
+      const val = u.extras[e.key] || '';
+      const real = realExtras[e.key] || '';
+      const pts = val ? extraPoints(e, val) : '';
+      rows.push([u.user.nickname,'Prêmio','','',e.label,val,'','',real,'','',pts]);
+    });
+  });
+  downloadCSV('palpites_bolao_2026.csv', rows);
+}
+
+window.exportPalpitesPDF = async function() {
+  const data = await gatherAllData();
+  let body = `<h1>⚽ Palpites de todos</h1><div class="subtitle">${new Date().toLocaleDateString('pt-BR')}</div>`;
+  data.forEach(u => {
+    body += `<h2>${u.user.nickname} — ${u.totalPts} pts</h2>`;
+    // Fase de grupos
+    body += `<h3>Fase de grupos</h3><table><thead><tr><th>Grupo</th><th>Confronto</th><th>Palpite</th><th>Real</th><th>⭐</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+    MATCHES.forEach(m => {
+      const p = u.palpites[m.key] || {}; const r = realScores[m.key] || {};
+      const isDbl = u.doubles[m.g] === m.key;
+      let pts = '—';
+      if (p.h !== undefined && p.h !== null && r.h !== undefined && r.h !== null) {
+        let bp = calcMatchPoints(p, r); if (isDbl) bp *= 2; pts = bp;
+      }
+      const palStr = p.h !== undefined && p.h !== null ? `${p.h}×${p.a}` : '—';
+      const realStr = r.h !== undefined && r.h !== null ? `${r.h}×${r.a}` : '—';
+      body += `<tr><td>${m.g}</td><td>${m.h} × ${m.a}</td><td>${palStr}</td><td>${realStr}</td><td>${isDbl?'⭐':''}</td><td style="text-align:right">${pts}</td></tr>`;
+    });
+    body += `</tbody></table>`;
+    // Mata-mata
+    if (koMatches.length) {
+      body += `<h3>Mata-mata</h3><table><thead><tr><th>Fase</th><th>Confronto</th><th>Palpite</th><th>Real</th><th>⭐</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+      koMatches.forEach(m => {
+        const phase = KO_PHASES.find(p => p.id === m.phase);
+        const pal = u.ko[m.id] || {};
+        const isDbl = u.koDoubles[m.phase] === m.id;
+        let pts = '—';
+        if (pal.h !== undefined && pal.h !== null && m.real_home !== undefined && m.real_home !== null) {
+          let bp = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+          if (isDbl) bp *= 2; bp *= phase.multiplier; pts = bp;
+        }
+        const palStr = pal.h !== undefined && pal.h !== null ? `${pal.h}×${pal.a}` : '—';
+        const realStr = m.real_home !== undefined && m.real_home !== null ? `${m.real_home}×${m.real_away}` : '—';
+        body += `<tr><td>${phase?.short||m.phase}</td><td>${m.home||'?'} × ${m.away||'?'}</td><td>${palStr}</td><td>${realStr}</td><td>${isDbl?'⭐':''}</td><td style="text-align:right">${pts}</td></tr>`;
+      });
+      body += `</tbody></table>`;
+    }
+    // Prêmios finais
+    body += `<h3>Prêmios finais</h3><table><thead><tr><th>Prêmio</th><th>Palpite</th><th>Oficial</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+    EXTRAS.forEach(e => {
+      const val = u.extras[e.key] || '—';
+      const real = realExtras[e.key] || '—';
+      const pts = (u.extras[e.key]) ? extraPoints(e, u.extras[e.key]) : '—';
+      body += `<tr><td>${e.label}</td><td>${val}</td><td>${real}</td><td style="text-align:right">${pts}</td></tr>`;
+    });
+    body += `</tbody></table>`;
+  });
+  openPrintWindow('Palpites', body);
+}
+
+window.exportResultadosCSV = async function() {
+  const rows = [['Fase','Grupo','Data','Local','Mandante','Casa','Fora','Visitante','Vencedor']];
+  MATCHES.forEach(m => {
+    const r = realScores[m.key] || {}; let venc = '';
+    if (r.h !== undefined && r.h !== null) venc = r.h > r.a ? m.h : r.h < r.a ? m.a : 'Empate';
+    rows.push(['Grupos',m.g,m.dt,m.local,m.h,r.h??'',r.a??'',m.a,venc]);
+  });
+  koMatches.forEach(m => {
+    const phase = KO_PHASES.find(p => p.id === m.phase);
+    rows.push([phase?.label||m.phase,'',m.dt||'',m.local||'',m.home||'',m.real_home??'',m.real_away??'',m.away||'']);
+  });
+  rows.push([]); rows.push(['Prêmio','Vencedor']);
+  EXTRAS.forEach(e => rows.push([e.label, realExtras[e.key]||'']));
+  downloadCSV('resultados_bolao_2026.csv', rows);
+}
+
+window.exportResultadosPDF = async function() {
+  let body = `<h1>🎯 Resultados Oficiais</h1><div class="subtitle">${new Date().toLocaleDateString('pt-BR')}</div>
+  <h2>Fase de Grupos</h2><table><thead><tr><th>Grupo</th><th>Data</th><th>Confronto</th><th style="text-align:center">Resultado</th></tr></thead><tbody>`;
+  MATCHES.forEach(m => {
+    const r = realScores[m.key] || {};
+    const score = r.h !== undefined && r.h !== null ? `<b>${r.h} × ${r.a}</b>` : '—';
+    body += `<tr><td>${m.g}</td><td class="small">${formatMatchDate(m.dt)}</td><td>${m.h} × ${m.a}</td><td style="text-align:center">${score}</td></tr>`;
+  });
+  body += `</tbody></table>`;
+  if (koMatches.length) {
+    body += `<h2>Mata-mata</h2><table><thead><tr><th>Fase</th><th>Data</th><th>Confronto</th><th style="text-align:center">Resultado</th></tr></thead><tbody>`;
+    koMatches.forEach(m => {
+      const phase = KO_PHASES.find(p => p.id === m.phase);
+      const score = m.real_home !== undefined && m.real_home !== null ? `<b>${m.real_home} × ${m.real_away}</b>` : '—';
+      body += `<tr><td>${phase?.short||m.phase}</td><td class="small">${m.dt?formatMatchDate(m.dt):'—'}</td><td>${m.home||'?'} × ${m.away||'?'}</td><td style="text-align:center">${score}</td></tr>`;
+    });
+    body += `</tbody></table>`;
+  }
+  body += `<h2>Prêmios</h2><table><thead><tr><th>Prêmio</th><th>Vencedor</th></tr></thead><tbody>`;
+  EXTRAS.forEach(e => body += `<tr><td>${e.label}</td><td><b>${realExtras[e.key]||'<i>—</i>'}</b></td></tr>`);
+  body += `</tbody></table>`;
+  openPrintWindow('Resultados', body);
+}
+
+window.exportTudoCSV = async function() {
+  const data = await gatherAllData();
+  const rows = [];
+  rows.push(['=== RANKING ===']); rows.push(['Pos','Apelido','Email','Base','Ajuste','Motivo','Total']);
+  data.forEach((u, i) => rows.push([i+1, u.user.nickname, u.user.email, u.basePts, u.adj, pointsAdjustments[u.user.uid]?.reason||'', u.totalPts]));
+  rows.push([]);
+  rows.push(['=== RESULTADOS ===']); rows.push(['Fase','Grupo','Data','Mandante','Casa','Fora','Visitante','Vencedor']);
+  MATCHES.forEach(m => {
+    const r = realScores[m.key] || {}; let venc = '';
+    if (r.h !== undefined && r.h !== null) venc = r.h > r.a ? m.h : r.h < r.a ? m.a : 'Empate';
+    rows.push(['Grupos',m.g,m.dt,m.h,r.h??'',r.a??'',m.a,venc]);
+  });
+  koMatches.forEach(m => {
+    const phase = KO_PHASES.find(p => p.id === m.phase);
+    rows.push([phase?.label||m.phase,'',m.dt||'',m.home||'',m.real_home??'',m.real_away??'',m.away||'']);
+  });
+  rows.push([]);
+  rows.push(['=== PRÊMIOS ===']); rows.push(['Prêmio','Vencedor']);
+  EXTRAS.forEach(e => rows.push([e.label, realExtras[e.key]||'']));
+  rows.push([]);
+  rows.push(['=== PALPITES DETALHADOS ===']);
+  rows.push(['Apelido','Fase/Tipo','Grupo','Data','Mandante/Prêmio','PCasa','PFora','Visitante','RCasa','RFora','Dbl','Pts']);
+  data.forEach(u => {
+    MATCHES.forEach(m => {
+      const p = u.palpites[m.key] || {}; const r = realScores[m.key] || {};
+      const isDbl = u.doubles[m.g] === m.key; let pts = '';
+      if (p.h !== undefined && p.h !== null && r.h !== undefined && r.h !== null) {
+        let bp = calcMatchPoints(p, r); if (isDbl) bp *= 2; pts = bp;
+      }
+      rows.push([u.user.nickname,'Grupos',m.g,m.dt,m.h,p.h??'',p.a??'',m.a,r.h??'',r.a??'',isDbl?'⭐':'',pts]);
+    });
+    koMatches.forEach(m => {
+      const phase = KO_PHASES.find(p => p.id === m.phase);
+      const pal = u.ko[m.id] || {};
+      const isDbl = u.koDoubles[m.phase] === m.id; let pts = '';
+      if (pal.h !== undefined && pal.h !== null && m.real_home !== undefined && m.real_home !== null) {
+        let bp = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+        if (isDbl) bp *= 2; bp *= phase.multiplier; pts = bp;
+      }
+      rows.push([u.user.nickname, phase?.label||m.phase,'',m.dt||'',m.home||'',pal.h??'',pal.a??'',m.away||'',m.real_home??'',m.real_away??'',isDbl?'⭐':'',pts]);
+    });
+    // Prêmios finais de cada participante (em linha por prêmio)
+    EXTRAS.forEach(e => {
+      const val = u.extras[e.key] || '';
+      const real = realExtras[e.key] || '';
+      const pts = val ? extraPoints(e, val) : '';
+      rows.push([u.user.nickname,'Prêmio','','',e.label,val,'','',real,'','',pts]);
+    });
+  });
+  rows.push([]);
+  rows.push(['=== PALPITES DE PRÊMIOS ===']);
+  rows.push(['Apelido', ...EXTRAS.map(e => e.label)]);
+  data.forEach(u => rows.push([u.user.nickname, ...EXTRAS.map(e => u.extras[e.key]||'')]));
+  downloadCSV('bolao_completo_2026.csv', rows);
+}
+
+window.exportTudoPDF = async function() {
+  const data = await gatherAllData();
+  let body = `<h1>📋 Relatório completo — Bolão Copa 2026</h1><div class="subtitle">${new Date().toLocaleString('pt-BR')}</div>
+  <h2>🏆 Ranking</h2><table><thead><tr><th>#</th><th>Apelido</th><th style="text-align:right">Base</th><th style="text-align:right">Aj.</th><th style="text-align:right">Total</th></tr></thead><tbody>`;
+  data.forEach((u, i) => body += `<tr class="${i===0?'gold':''}"><td><b>${i+1}</b></td><td>${u.user.nickname}</td><td style="text-align:right">${u.basePts}</td><td style="text-align:right">${u.adj!==0?(u.adj>0?'+':'')+u.adj:'—'}</td><td style="text-align:right"><b>${u.totalPts}</b></td></tr>`);
+  body += `</tbody></table><h2>🎯 Resultados Oficiais</h2>`;
+  const matchesByGroup = {};
+  MATCHES.forEach(m => { if (!matchesByGroup[m.g]) matchesByGroup[m.g] = []; matchesByGroup[m.g].push(m); });
+  body += `<table><thead><tr><th>Grupo</th><th>Confronto</th><th style="text-align:center">Resultado</th></tr></thead><tbody>`;
+  Object.keys(matchesByGroup).sort().forEach(g => matchesByGroup[g].forEach(m => {
+    const r = realScores[m.key] || {};
+    const score = r.h !== undefined && r.h !== null ? `<b>${r.h} × ${r.a}</b>` : '—';
+    body += `<tr><td>${m.g}</td><td>${m.h} × ${m.a}</td><td style="text-align:center">${score}</td></tr>`;
+  }));
+  body += `</tbody></table><h2>🏅 Prêmios</h2><table><thead><tr><th>Prêmio</th><th>Vencedor</th></tr></thead><tbody>`;
+  EXTRAS.forEach(e => body += `<tr><td>${e.label}</td><td><b>${realExtras[e.key]||'—'}</b></td></tr>`);
+  body += `</tbody></table><h2>👥 Palpites por participante</h2>`;
+  data.forEach(u => {
+    body += `<h3>${u.user.nickname} — ${u.totalPts} pts</h3>`;
+    body += `<table><thead><tr><th>G</th><th>Confronto</th><th>Palpite</th><th>Real</th><th>⭐</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+    MATCHES.forEach(m => {
+      const p = u.palpites[m.key] || {}; const r = realScores[m.key] || {};
+      const isDbl = u.doubles[m.g] === m.key; let pts = '—';
+      if (p.h !== undefined && p.h !== null && r.h !== undefined && r.h !== null) {
+        let bp = calcMatchPoints(p, r); if (isDbl) bp *= 2; pts = bp;
+      }
+      const palStr = p.h !== undefined && p.h !== null ? `${p.h}×${p.a}` : '—';
+      const realStr = r.h !== undefined && r.h !== null ? `${r.h}×${r.a}` : '—';
+      body += `<tr><td>${m.g}</td><td>${m.h} × ${m.a}</td><td>${palStr}</td><td>${realStr}</td><td>${isDbl?'⭐':''}</td><td style="text-align:right">${pts}</td></tr>`;
+    });
+    body += `</tbody></table>`;
+    // Mata-mata do participante
+    if (koMatches.length) {
+      body += `<table><thead><tr><th>Fase</th><th>Confronto</th><th>Palpite</th><th>Real</th><th>⭐</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+      koMatches.forEach(m => {
+        const phase = KO_PHASES.find(p => p.id === m.phase);
+        const pal = u.ko[m.id] || {};
+        const isDbl = u.koDoubles[m.phase] === m.id; let pts = '—';
+        if (pal.h !== undefined && pal.h !== null && m.real_home !== undefined && m.real_home !== null) {
+          let bp = calcMatchPoints({h:pal.h,a:pal.a}, {h:m.real_home,a:m.real_away});
+          if (isDbl) bp *= 2; bp *= phase.multiplier; pts = bp;
+        }
+        const palStr = pal.h !== undefined && pal.h !== null ? `${pal.h}×${pal.a}` : '—';
+        const realStr = m.real_home !== undefined && m.real_home !== null ? `${m.real_home}×${m.real_away}` : '—';
+        body += `<tr><td>${phase?.short||m.phase}</td><td>${m.home||'?'} × ${m.away||'?'}</td><td>${palStr}</td><td>${realStr}</td><td>${isDbl?'⭐':''}</td><td style="text-align:right">${pts}</td></tr>`;
+      });
+      body += `</tbody></table>`;
+    }
+    // Prêmios do participante
+    body += `<table><thead><tr><th>Prêmio</th><th>Palpite</th><th>Oficial</th><th style="text-align:right">Pts</th></tr></thead><tbody>`;
+    EXTRAS.forEach(e => {
+      const val = u.extras[e.key] || '—';
+      const real = realExtras[e.key] || '—';
+      const pts = (u.extras[e.key]) ? extraPoints(e, u.extras[e.key]) : '—';
+      body += `<tr><td>${e.label}</td><td>${val}</td><td>${real}</td><td style="text-align:right">${pts}</td></tr>`;
+    });
+    body += `</tbody></table>`;
+  });
+  openPrintWindow('Relatório Completo', body);
+}
+
+function invalidateAllUsersCache() {
+  allUsersDataCache = null;
+  allUsersDataCacheTime = 0;
+}
+
+function flashSave() {
+  const el = document.getElementById('save-indicator');
+  el.classList.add('show');
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// === AUTO-LOGIN ===
+window.addEventListener('firebase-ready', async () => {
+  const { auth, onAuthStateChanged } = window.fb;
+  onAuthStateChanged(auth, async (user) => {
+    if (user && !currentUser) {
+      currentUser = user;
+      try { await onLoginSuccess(); } catch (e) { console.error('Login restore failed:', e); }
+    }
+  });
+});
+
+</script>
+
+</body>
+</html>
